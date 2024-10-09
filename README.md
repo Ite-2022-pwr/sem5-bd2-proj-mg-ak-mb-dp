@@ -13,20 +13,20 @@ Projekt ma na celu stworzenie systemu, który ułatwi zarządzanie danymi i komu
     - widok obecności na lekcjach
  
 - **Panel rodzica**
-    - essentially co dziecka
+    - wgląd do widoku ucznia (fukncjonalność panelu ucznia z widokami)
     - mozna przełączać między dziećmi 
     - mozliwosc wysłania usprawiedliwienia
  
 - **Panel nauczyciela**
-    - plan lekcji
-    - listy obecności 
-    - wystaeianie ocen
-    - wysylanie ogłoszeń 
+    - wgląd do planu lekcji
+    - uzupełnianie oraz przeglądanie listy obecności 
+    - wystawianie ocen
+    - wysylanie ogłoszeń
  
 - **Panel administratora**
-    - dodaj usuń edytuj uczniow nauczycieli rodziców 
-    - ogloszenia dla wszystkich 
-    - resetowanie haseł itp
+    - dodaj usuń edytuj (uczniow nauczycieli rodziców )
+    - umieszczanie ogloszenia dla wszystkich (nauczyciel, rodzic, uczeń) 
+    - resetowanie haseł 
 
 ## Technologia
 
