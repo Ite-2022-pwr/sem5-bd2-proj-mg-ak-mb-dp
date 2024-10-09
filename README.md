@@ -1,5 +1,12 @@
 # Bazy danych 2 - projekt
 
+## Skład grupy
+
+- [Miłosz Bedryło](https://github.com/lolex565)
+- [Mateusz Głuchowski](https://github.com/hue1337)
+- [Artur Kręgiel](https://github.com/arkregiel)
+- [Dominik Pokrzywa](https://github.com/serrwo)
+
 ## Opis słowny systemu - Dziennik szkolny
 
 Projekt ma na celu stworzenie systemu, który ułatwi zarządzanie danymi i komunikację w szkole. Baza danych będzie centralnym elementem systemu, oferując różne funkcje dla uczniów, rodziców, nauczycieli oraz administracji.
