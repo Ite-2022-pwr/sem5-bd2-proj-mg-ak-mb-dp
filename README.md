@@ -9,31 +9,38 @@
 
 ## Opis słowny systemu - Dziennik szkolny
 
-Projekt ma na celu stworzenie systemu, który ułatwi zarządzanie danymi i komunikację w szkole. Baza danych będzie centralnym elementem systemu, oferując różne funkcje dla uczniów, rodziców, nauczycieli oraz administracji.
+Projekt ma na celu stworzenie systemu, który ułatwi zarządzanie danymi, nauczania, komunikacją w szkole. Baza danych będzie centralnym elementem systemu, aplikacja dostępowa oferująca różne funkcje dla uczniów, rodziców, nauczycieli oraz administracji.
 
 ### Funkcjonalność
 
 - **Panel ucznia**
-    - widok planu lekcji
-    - widok zapowiedzianych sprawdzianów, kartkówek 
-    - widok ocen oraz średniej
-    - widok obecności na lekcjach
+    - możliowść przeglądania planu lekcji
+    - możliwość przeglądania zapowiedzianych sprawdzianów, kartkówek 
+    - możliwosć przeglądania ocen oraz średniej
+    - możliwość przeglądania obecności na lekcjach
+    - otrzymywanie i przeglądanie wiadomości od nauczyciela
  
 - **Panel rodzica**
-    - wgląd do widoku ucznia (fukncjonalność panelu ucznia z widokami)
-    - mozna przełączać między dziećmi 
-    - mozliwosc wysłania usprawiedliwienia
+    - posiada pełną funkcjonalność ucznia
+    - możliowść przełączania między dziećmi 
+    - mozliwość wysłania usprawiedliwienia
+    - możliwość korespondowania z nauczycielem
  
 - **Panel nauczyciela**
-    - wgląd do planu lekcji
+    - możliowść wglądu do planów lekcji 
     - uzupełnianie oraz przeglądanie listy obecności 
     - wystawianie ocen
-    - wysylanie ogłoszeń
+    - wysyłanie ogłoszeń
+    - prowadzenie korespondecji z rodzicami (crud)
  
-- **Panel administratora**
+- **Panel dyrektora (administrator merytoryczny)**
     - dodaj usuń edytuj (uczniow nauczycieli rodziców )
     - umieszczanie ogloszenia dla wszystkich (nauczyciel, rodzic, uczeń) 
     - resetowanie haseł 
+
+- **Panel administratora (administrator techniczny)**
+    - wgląd do całości systemu
+
 
 ## Technologia
 
@@ -48,3 +55,8 @@ Projekt ma na celu stworzenie systemu, który ułatwi zarządzanie danymi i komu
 ### Frontend
 
 - TypeScript + React + ChackraUI
+
+## To do:
+- Aplikacja webowa - dodanie informacji
+- Szacowanie licznośći - najwięcej encji (oceny)
+- Autoryzacja (najpopularniejszy sposób autoryzacji)
