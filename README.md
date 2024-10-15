@@ -19,20 +19,20 @@ Projekt ma na celu stworzenie systemu, który ułatwi zarządzanie danymi, naucz
     - możliwosć przeglądania ocen oraz średniej
     - możliwość przeglądania obecności na lekcjach
     - otrzymywanie i przeglądanie wiadomości od nauczyciela
- 
+
 - **Panel rodzica**
     - posiada pełną funkcjonalność ucznia
     - możliowść przełączania między dziećmi 
     - mozliwość wysłania usprawiedliwienia
     - możliwość korespondowania z nauczycielem
- 
+
 - **Panel nauczyciela**
     - możliowść wglądu do planów lekcji 
     - uzupełnianie oraz przeglądanie listy obecności 
     - wystawianie ocen
     - wysyłanie ogłoszeń
     - prowadzenie korespondecji z rodzicami (crud)
- 
+
 - **Panel dyrektora (administrator merytoryczny)**
     - dodaj usuń edytuj (uczniow nauczycieli rodziców )
     - umieszczanie ogloszenia dla wszystkich (nauczyciel, rodzic, uczeń) 
@@ -57,6 +57,7 @@ Projekt ma na celu stworzenie systemu, który ułatwi zarządzanie danymi, naucz
 - TypeScript + React + ChackraUI
 
 ## To do:
+
 - Aplikacja webowa - dodanie informacji
 - Szacowanie licznośći - najwięcej encji (oceny)
 - Autoryzacja (najpopularniejszy sposób autoryzacji)
