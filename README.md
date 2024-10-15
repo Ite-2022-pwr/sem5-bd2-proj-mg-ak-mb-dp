@@ -9,9 +9,17 @@
 
 ## Opis słowny systemu - Dziennik szkolny
 
-Projekt ma na celu stworzenie systemu, który ułatwi zarządzanie danymi, nauczania, komunikacją w szkole. Baza danych będzie centralnym elementem systemu, aplikacja dostępowa oferująca różne funkcje dla uczniów, rodziców, nauczycieli oraz administracji.
+Projekt ma na celu stworzenie systemu dziennika elektronicznego, który ułatwi:
+- zarządzanie uczniami
+- zarządzanie planem lekcji
+- zarządzanie ocenami
+- komunikację między nauczycielami a rodzicami i uczniami
 
-### Funkcjonalność
+Centralnym elementem systemu będzie **baza danych**.
+
+Interakcja z bazą danych będzie możliwa dzięki **aplikacji dostępowej**, która zostanie zaimplementowana jako **aplikacja webowa** zgodnie ze wzorcem [MVC](https://pl.wikipedia.org/wiki/Model-View-Controller).
+
+## Wymagania funkcjonalne
 
 - **Panel ucznia**
     - możliowść przeglądania planu lekcji
@@ -22,41 +30,67 @@ Projekt ma na celu stworzenie systemu, który ułatwi zarządzanie danymi, naucz
  
 - **Panel rodzica**
     - posiada pełną funkcjonalność ucznia
-    - możliowść przełączania między dziećmi 
-    - mozliwość wysłania usprawiedliwienia
-    - możliwość korespondowania z nauczycielem
+    - możliowść przełączania między swoimi dziećmi 
+    - mozliwość usprawiedliwiania nieobecności ucznia (dziecka)
+    - możliwość prowadzenia korespondecji z nauczycielem (CRUD)
  
 - **Panel nauczyciela**
     - możliowść wglądu do planów lekcji 
-    - uzupełnianie oraz przeglądanie listy obecności 
-    - wystawianie ocen
-    - wysyłanie ogłoszeń
-    - prowadzenie korespondecji z rodzicami (crud)
+    - możliwość uzupełniania oraz przeglądania listy obecności 
+    - możliwość wystawiania ocen
+    - możliwość wysyłania ogłoszeń do uczniów i rodziców
+    - możliwość prowadzenia korespondecji z rodzicami oraz innymi nauczycielami (CRUD)
  
 - **Panel dyrektora (administrator merytoryczny)**
-    - dodaj usuń edytuj (uczniow nauczycieli rodziców )
-    - umieszczanie ogloszenia dla wszystkich (nauczyciel, rodzic, uczeń) 
-    - resetowanie haseł 
+    - dodawanie, usuwanie, edytowanie: 
+        - uczniow,
+        - nauczycieli, 
+        - rodziców
+    - możliowść wglądu do planów lekcji
+    - możliwość wysyłania ogłoszeń do rodziców oraz uczniów
+    - możliwość prowadzenia korespondecji z rodzicami oraz nauczycielami (CRUD)
 
 - **Panel administratora (administrator techniczny)**
-    - wgląd do całości systemu
+    - posiadanie pełnej kontroli nad systemem
 
 
-## Technologia
+## Wymagania niefunkcjonalne
 
-### Baza danych
+System zostanie zaimplementowany jako **aplikacja** webowa zgodnie ze wzorcem [MVC](https://pl.wikipedia.org/wiki/Model-View-Controller).
 
-- PostgreSQL
+### Wykorzystywane technologie i narzędzia
 
-### Backend
+- **Baza danych**
+    - [PostgreSQL](https://www.postgresql.org/)
 
-- Java + Spring Boot + Hibernate + Lombok
+- **Backend**
+    - język programowania: [Java](https://www.java.com/pl/)
+    - biblioteki oraz frameworki:
+        - [Spring Boot](https://spring.io/projects/spring-boot)
+        - [Hibernate](https://hibernate.org/)
+        - [Lombok](https://projectlombok.org/)
 
-### Frontend
+- **Frontend**
+    - język programowania: [TypeScript](https://www.typescriptlang.org/)
+    - biblioteki:
+        - [React](https://react.dev/)
+        - [ChakraUI](https://v2.chakra-ui.com/)
 
-- TypeScript + React + ChackraUI
+### Wymagania dotyczące rozmiaru bazy danych
 
-## To do:
-- Aplikacja webowa - dodanie informacji
-- Szacowanie licznośći - najwięcej encji (oceny)
-- Autoryzacja (najpopularniejszy sposób autoryzacji)
+
+### Wymagania dotyczące bezpieczeństwa systemu
+
+Podstawowym mechanizmem bezpieczeństwa zapewniającym uwierzytelnienie użytkownika będzie konieczność podania nazwy użytkownika oraz hasła podczas logowania. Użytkownik niezaogowany nie będzie miał dostępu do systemu.
+
+Hasła użytkowników, aby utrudnić uzyskanie nieautoryzowanego dostępu do aplikacji, muszą składać się z co najmniej 8 znaków oraz zawierać:
+- małą literę
+- wielką literę
+- cyfrę
+- znak specjalny
+
+Hasła w bazie danych będą haszowane z użyciem algorytmu SHA256.
+
+Autoryzacja zalogowanych użytkowników będzie bazowała na uprawnieniach dla konkretnych ról użytkowników: uczeń, rodzic, nauczyciel, administrator merytoryczny, administrator techniczny. Przykładowo, uczeń i rodzic nie będą mogli modyfikować planu lekcji, ocen oraz obecności.
+
+Zastosowanie wyżej wymienionych bibliotek przy implementacji aplikacji dostępowej uniemożliwi przeprowadzenie ataków takich jak SQL injcection oraz Cross-Site Scripting.
