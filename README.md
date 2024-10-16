@@ -78,6 +78,14 @@ System zostanie zaimplementowany jako **aplikacja** webowa zgodnie ze wzorcem [M
 
 ### Wymagania dotyczące rozmiaru bazy danych
 
+Przyjmując przykładową szkołę podstawową z 8 rocznikami, gdzie każdy ma dwie 25 osobowe klasy, najbardziej licznymi encjami okazały się wpisy obecności oraz oceny.
+
+Pozostałe założenia do oszacowania to średnio 5 lekcji dziennie, oraz to że uczeń średnio w tygodniu roboczym. dostaje 3 oceny
+
+Wygenerowane przez użytkowników w ciągu jednego semestru mającego 90 dni roboczych wpisy obecności same zajmą około 200 tys. rekordów, a oceny około 22 tys.
+
+![image](https://github.com/user-attachments/assets/c0835f1b-672e-4998-ba6a-7cc45706070f)
+
 
 ### Wymagania dotyczące bezpieczeństwa systemu
 
@@ -94,12 +102,3 @@ Hasła w bazie danych będą haszowane z użyciem algorytmu SHA256.
 Autoryzacja zalogowanych użytkowników będzie bazowała na uprawnieniach dla konkretnych ról użytkowników: uczeń, rodzic, nauczyciel, administrator merytoryczny, administrator techniczny. Przykładowo, uczeń i rodzic nie będą mogli modyfikować planu lekcji, ocen oraz obecności.
 
 Zastosowanie wyżej wymienionych bibliotek przy implementacji aplikacji dostępowej uniemożliwi przeprowadzenie ataków takich jak SQL injcection oraz Cross-Site Scripting.
-
-### Szacowana liczebność encji
-
-Przyjmując przykładową szkołę podstawową z 8 klasami gdzie w każdej z nich są dwie grupy po 25 osób najbardziej licznymi encjami okazały się wpisy obecności oraz oceny.
-
-Wpisy obecności same zajmą około 200 tys. rekordów, a oceny około 22 tys..
-
-![image](https://github.com/user-attachments/assets/c0835f1b-672e-4998-ba6a-7cc45706070f)
-
