@@ -94,3 +94,12 @@ Hasła w bazie danych będą haszowane z użyciem algorytmu SHA256.
 Autoryzacja zalogowanych użytkowników będzie bazowała na uprawnieniach dla konkretnych ról użytkowników: uczeń, rodzic, nauczyciel, administrator merytoryczny, administrator techniczny. Przykładowo, uczeń i rodzic nie będą mogli modyfikować planu lekcji, ocen oraz obecności.
 
 Zastosowanie wyżej wymienionych bibliotek przy implementacji aplikacji dostępowej uniemożliwi przeprowadzenie ataków takich jak SQL injcection oraz Cross-Site Scripting.
+
+### Szacowana liczebność encji
+
+Przyjmując przykładową szkołę podstawową z 8 klasami gdzie w każdej z nich są dwie grupy po 25 osób najbardziej licznymi encjami okazały się wpisy obecności oraz oceny.
+
+Wpisy obecności same zajmą około 200 tys. rekordów, a oceny około 22 tys..
+
+![image](https://github.com/user-attachments/assets/c0835f1b-672e-4998-ba6a-7cc45706070f)
+
