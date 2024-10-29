@@ -13,8 +13,8 @@
   - `Email`: Adres e-mail użytkownika (opcjonalny).
   - `IsAdmin`: Flaga wskazująca, czy użytkownik ma uprawnienia administratora.
   - `FirstName`, `SecondName`, `Surname`: Imię, drugie imię i nazwisko użytkownika.
-  - `PostCode`, `Street`, `BuildingNumber`, `AppartmentNumber`: Informacje adresowe użytkownika.
-  - `Role`: Rola użytkownika w systemie (np. student, nauczyciel).
+  - `IdAddress` (FK): Odniesienie do adresu w tabeli `Adresses`.
+  - `Role`: Rola użytkownika w systemie (np. uczeń, nauczyciel, rodzic, admin).
 
 #### **2. PostCodes (Kody Pocztowe)**
 - **Przeznaczenie:** Zawiera kody pocztowe wraz z nazwami regionów, takich jak miasta, przedmieścia czy wsie.
@@ -22,24 +22,34 @@
   - `PostCode` (PK): Unikalny kod pocztowy.
   - `RegionName`: Nazwa regionu związana z kodem pocztowym.
 
-#### **3. Classes (Klasy)**
+#### **3. Adresses (Adresy)**
+- **Przeznaczenie:** Przechowuje szczegółowe informacje adresowe użytkowników.
+- **Kluczowe Atrybuty:**
+  - `IdAddress` (PK): Unikalny identyfikator adresu.
+  - `PostCode` (FK): Odniesienie do kodu pocztowego w tabeli `PostCodes`.
+  - `Street` (opcjonalne): Ulica.
+  - `BuildingNumber`: Numer budynku.
+  - `AdditionalBuildingIdentifier` (opcjonalny): Dodatkowy identyfikator budynku (np. litera w numerze budynku).
+  - `AppartmentNumber` (opcjonalny): Numer mieszkania.
+
+#### **4. Classes (Klasy)**
 - **Przeznaczenie:** Przechowuje informacje o klasach szkolnych.
 - **Kluczowe Atrybuty:**
   - `IdClass` (PK): Unikalny identyfikator klasy.
   - `YearOfStudy`: Rok nauki.
   - `YearStarted`: Rok rozpoczęcia nauki w klasie.
 
-#### **4. Students (Studenci)**
+#### **5. Students (Uczniowie)**
 - **Przeznaczenie:** Specjalizacja tabeli `Users` dla uczniów, zawierająca dodatkowe informacje.
 - **Kluczowe Atrybuty:**
-  - `IdStudent` (PK): Unikalny identyfikator studenta.
+  - `IdStudent` (PK): Unikalny identyfikator ucznia.
   - `IdUser` (FK): Odniesienie do użytkownika w tabeli `Users`.
   - `IdClass` (FK): Odniesienie do klasy w tabeli `Classes`.
-  - `DateOfBirth`: Data urodzenia studenta.
-  - `Age`: Wiek studenta (opcjonalny).
-  - `Gender`: Płeć studenta.
+  - `DateOfBirth`: Data urodzenia ucznia.
+  - `Age`: Wiek ucznia.
+  - `Gender`: Płeć ucznia (`ENUM('male', 'female', 'other')`).
 
-#### **5. Teachers (Nauczyciele)**
+#### **6. Teachers (Nauczyciele)**
 - **Przeznaczenie:** Specjalizacja tabeli `Users` dla nauczycieli, zawierająca dodatkowe informacje.
 - **Kluczowe Atrybuty:**
   - `IdTeacher` (PK): Unikalny identyfikator nauczyciela.
@@ -47,49 +57,56 @@
   - `LastCOCRDate`: Data ostatniego zaświadczenia o niekaralności.
   - `OnLeave`: Flaga wskazująca, czy nauczyciel jest na urlopie.
 
-#### **6. SchoolSubjects (Przedmioty Szkolne)**
+#### **7. SchoolSubjects (Przedmioty Szkolne)**
 - **Przeznaczenie:** Przechowuje informacje o przedmiotach nauczanych w szkole.
 - **Kluczowe Atrybuty:**
   - `IdSchoolSubject` (PK): Unikalny identyfikator przedmiotu.
   - `Name`: Nazwa przedmiotu.
   - `SchoolYear`: Rok szkolny, w którym przedmiot jest nauczany.
-  - `LinkToSubjectProgram`: Link do programu przedmiotu (opcjonalny).
+  - `LinkToSubjectProgram` (opcjonalny): Link do programu przedmiotu.
 
-#### **7. Lessons (Lekcje)**
+#### **8. Lessons (Lekcje)**
 - **Przeznaczenie:** Przechowuje informacje o lekcjach.
 - **Kluczowe Atrybuty:**
   - `IdLesson` (PK): Unikalny identyfikator lekcji.
   - `IdSchoolSubject` (FK): Odniesienie do przedmiotu w tabeli `SchoolSubjects`.
   - `IdTeacher` (FK): Odniesienie do nauczyciela w tabeli `Teachers`.
   - `IdClass` (FK): Odniesienie do klasy w tabeli `Classes`.
-  - `Topic`: Temat lekcji (opcjonalny).
+  - `Topic` (opcjonalny): Temat lekcji.
   - `Date`: Data i godzina lekcji.
 
-#### **8. Grades (Oceny)**
-- **Przeznaczenie:** Przechowuje oceny studentów.
+#### **9. TeachersTeachingSubjects (Nauczyciele Nauczający Przedmioty)**
+- **Przeznaczenie:** Łączy nauczycieli z przedmiotami, które nauczają.
+- **Kluczowe Atrybuty:**
+  - `IdTeacher` (FK): Odniesienie do nauczyciela w tabeli `Teachers`.
+  - `IdSchoolSubject` (FK): Odniesienie do przedmiotu w tabeli `SchoolSubjects`.
+- **Klucz Główny:** `IdTeacher`, `IdSchoolSubject`
+
+#### **10. Grades (Oceny)**
+- **Przeznaczenie:** Przechowuje oceny uczniów.
 - **Kluczowe Atrybuty:**
   - `IdGrade` (PK): Unikalny identyfikator oceny.
-  - `IdStudent` (FK): Odniesienie do studenta w tabeli `Students`.
+  - `IdStudent` (FK): Odniesienie do ucznia w tabeli `Students`.
   - `IdTeacher` (FK): Odniesienie do nauczyciela w tabeli `Teachers`.
   - `IdSubject` (FK): Odniesienie do przedmiotu w tabeli `SchoolSubjects`.
-  - `NumberGrade`: Numer oceny.
+  - `NumberGrade`: Numer oceny (domyślnie 1).
   - `Description`: Opis oceny.
   - `Date`: Data wystawienia oceny.
 
-#### **9. Parents (Rodzice)**
+#### **11. Parents (Rodzice)**
 - **Przeznaczenie:** Specjalizacja tabeli `Users` dla rodziców.
 - **Kluczowe Atrybuty:**
   - `IdParent` (PK): Unikalny identyfikator rodzica.
   - `IdUser` (FK): Odniesienie do użytkownika w tabeli `Users`.
-  - `Role`: Rola rodzica (np. ojciec, matka, opiekun prawny).
+  - `Role`: Rola rodzica (`ENUM('father', 'mother', 'parent', 'legal_guardian')`).
 
-#### **10. ParentsStudentPairs (Powiązania Rodziców ze Studentami)**
-- **Przeznaczenie:** Łączy rodziców ze studentami, umożliwiając przypisanie wielu rodziców do jednego studenta i odwrotnie.
+#### **12. ParentsStudentPairs (Powiązania Rodziców ze Studentami)**
+- **Przeznaczenie:** Łączy rodziców ze studentami, umożliwiając przypisanie wielu rodziców do jednego ucznia i odwrotnie.
 - **Kluczowe Atrybuty:**
-  - `IdStudent` (FK): Odniesienie do studenta w tabeli `Students`.
+  - `IdStudent` (FK): Odniesienie do ucznia w tabeli `Students`.
   - `IdParent` (FK): Odniesienie do rodzica w tabeli `Parents`.
 
-#### **11. Messages (Wiadomości)**
+#### **13. Messages (Wiadomości)**
 - **Przeznaczenie:** Przechowuje wiadomości wysyłane między użytkownikami.
 - **Kluczowe Atrybuty:**
   - `IdMessage` (PK): Unikalny identyfikator wiadomości.
@@ -97,27 +114,27 @@
   - `Content`: Treść wiadomości.
   - `DateSent`: Data wysłania wiadomości.
 
-#### **12. MessageUserReceiverPairs (Powiązania Wiadomości z Odbiorcami)**
+#### **14. MessageUserReceiverPairs (Powiązania Wiadomości z Odbiorcami)**
 - **Przeznaczenie:** Łączy wiadomości z ich odbiorcami.
 - **Kluczowe Atrybuty:**
   - `IdMessage` (FK): Odniesienie do wiadomości w tabeli `Messages`.
   - `IdUserReceiver` (FK): Odniesienie do odbiorcy w tabeli `Users`.
 
-#### **13. Presences (Frekwencja)**
-- **Przeznaczenie:** Przechowuje informacje o obecności studentów na lekcjach.
+#### **15. Presences (Frekwencja)**
+- **Przeznaczenie:** Przechowuje informacje o obecności uczniów na lekcjach.
 - **Kluczowe Atrybuty:**
   - `IdPresence` (PK): Unikalny identyfikator frekwencji.
   - `IdLesson` (FK): Odniesienie do lekcji w tabeli `Lessons`.
-  - `IdStudent` (FK): Odniesienie do studenta w tabeli `Students`.
-  - `Type`: Typ obecności (np. obecny, usprawiedliwiona nieobecność).
+  - `IdStudent` (FK): Odniesienie do ucznia w tabeli `Students`.
+  - `Type`: Typ obecności (`ENUM('present', 'excused_absence', 'unexcused_absence')`).
 
-#### **14. PhoneNumbers (Numery Telefonów)**
+#### **16. PhoneNumbers (Numery Telefonów)**
 - **Przeznaczenie:** Przechowuje numery telefonów użytkowników.
 - **Kluczowe Atrybuty:**
   - `IdPhoneNumber` (PK): Unikalny identyfikator numeru telefonu.
   - `PhoneNumber`: Numer telefonu.
 
-#### **15. PhoneNumbersParentsMatch (Powiązania Numerów Telefonów z Rodzicami)**
+#### **17. PhoneNumbersParentsMatch (Powiązania Numerów Telefonów z Rodzicami)**
 - **Przeznaczenie:** Łączy numery telefonów z rodzicami, umożliwiając dodanie opisu do każdego połączenia.
 - **Kluczowe Atrybuty:**
   - `IdPhoneNumber` (FK): Odniesienie do numeru telefonu w tabeli `PhoneNumbers`.
@@ -129,20 +146,28 @@
 #### **1. Relacje Jeden-do-Wielu (1:N)**
 - **Users → Adresses:**
   - Jeden adres (`Adresses`) może być przypisany do wielu użytkowników (`Users`).
-  - **Przykład:** Adres `PostCode = "00-001"` może być przypisany do użytkowników `IdUser = 1, 2, 3`.
-
+  - **Przykład:** Adres `IdAddress = 1` może być przypisany do użytkowników `IdUser = 1, 2, 3`.
+  
 - **Classes → Students:**
-  - Jedna klasa (`Classes`) może mieć wielu studentów (`Students`).
-  - **Przykład:** Klasa `IdClass = 1` może mieć studentów `IdStudent = 1, 2, 3`.
+  - Jedna klasa (`Classes`) może mieć wielu uczniów (`Students`).
+  - **Przykład:** Klasa `IdClass = 1` może mieć uczniów `IdStudent = 1, 2, 3`.
+
+- **SchoolSubjects → Lessons:**
+  - Jeden przedmiot (`SchoolSubjects`) może mieć wiele lekcji (`Lessons`).
+  - **Przykład:** Przedmiot `IdSchoolSubject = 1` może mieć lekcje `IdLesson = 1, 2, 3`.
+
+- **Teachers → Lessons:**
+  - Jeden nauczyciel (`Teachers`) może prowadzić wiele lekcji (`Lessons`).
+  - **Przykład:** Nauczyciel `IdTeacher = 1` może prowadzić lekcje `IdLesson = 1, 2`.
 
 #### **2. Relacje Wielu-do-Wielu (M:N)**
-- **TeachersTeachingSubjects (Nauczyciele → Przedmioty Szkolne):**
+- **TeachersTeachingSubjects (Nauczyciele Nauczający Przedmioty):**
   - Jeden nauczyciel może uczyć wielu przedmiotów, a jeden przedmiot może być nauczany przez wielu nauczycieli.
   - **Przykład:** Nauczyciel `IdTeacher = 1` może uczyć przedmiotów `IdSchoolSubject = 1, 2`, a przedmiot `IdSchoolSubject = 1` może być nauczany przez nauczycieli `IdTeacher = 1, 2`.
-
-- **ParentsStudentPairs (Rodzice → Studenci):**
-  - Jeden rodzic może mieć wielu studentów, a jeden student może mieć wielu rodziców.
-  - **Przykład:** Rodzic `IdParent = 1` może mieć studentów `IdStudent = 1, 2`, a student `IdStudent = 1` może mieć rodziców `IdParent = 1, 2`.
+  
+- **ParentsStudentPairs (Rodzice → Uczniowie):**
+  - Jeden rodzic może mieć wielu uczniów, a jeden uczeń może mieć wielu rodziców.
+  - **Przykład:** Rodzic `IdParent = 1` może mieć uczniów `IdStudent = 1, 2`, a uczeń `IdStudent = 1` może mieć rodziców `IdParent = 1, 2`.
 
 #### **3. Relacja Jeden-do-Zerowego lub Wielu (1:0..N)**
 - **Presences → Lessons:**
@@ -154,33 +179,64 @@
 #### **1. Przykład Kluczy Obcych Zapewniających Spójność**
 - **Tabela `Students`:**
   - `IdUser` jest kluczem obcym odnoszącym się do `Users(IdUser)`.
-  - **Jak to działa:** Zapewnia, że każdy student ma odpowiadającego użytkownika w tabeli `Users`. Nie można dodać studenta bez istniejącego użytkownika, co zapobiega niespójnym danym.
+  - `IdClass` jest kluczem obcym odnoszącym się do `Classes(IdClass)`.
+  - **Jak to działa:** Zapewnia, że każdy uczeń jest powiązany z istniejącym użytkownikiem i klasą. Nie można dodać ucznia bez istniejącego użytkownika lub klasy, co zapobiega niespójnym danym.
 
 - **Tabela `Presences`:**
   - `IdLesson` jest kluczem obcym odnoszącym się do `Lessons(IdLesson)`.
   - `IdStudent` jest kluczem obcym odnoszącym się do `Students(IdStudent)`.
-  - **Jak to działa:** Zapewnia, że każda frekwencja odnosi się do istniejącej lekcji i istniejącego studenta. Nie można dodać wpisu frekwencji dla nieistniejącej lekcji lub studenta.
+  - **Jak to działa:** Zapewnia, że każda frekwencja odnosi się do istniejącej lekcji i istniejącego ucznia. Nie można dodać wpisu frekwencji dla nieistniejącej lekcji lub ucznia.
+
+- **Tabela `Grades`:**
+  - `IdSubject` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
+  - `IdStudent` jest kluczem obcym odnoszącym się do `Students(IdStudent)`.
+  - `IdTeacher` jest kluczem obcym odnoszącym się do `Teachers(IdTeacher)`.
+  - **Jak to działa:** Każda ocena musi być przypisana do istniejącego przedmiotu, ucznia i nauczyciela. Nie można wprowadzić oceny dla przedmiotu, ucznia lub nauczyciela, który nie istnieje w odpowiednich tabelach.
 
 #### **2. Przykład Relacji z Kluczem Obcym**
 - **Tabela `Grades`:**
   - `IdSubject` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
   - **Jak to działa:** Każda ocena musi być przypisana do istniejącego przedmiotu. Nie można wprowadzić oceny dla przedmiotu, który nie istnieje w tabeli `SchoolSubjects`.
 
-### **d. Pola Opcjonalne w Tabelach**
+- **Tabela `TeachersTeachingSubjects`:**
+  - `IdTeacher` jest kluczem obcym odnoszącym się do `Teachers(IdTeacher)`.
+  - `IdSchoolSubject` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
+  - **Jak to działa:** Zapewnia, że każdy nauczyciel może być przypisany tylko do istniejących przedmiotów i odwrotnie.
 
-- **Users:**
-  - `SecondName`: Nie każdy użytkownik ma drugie imię, więc pole to jest opcjonalne.
-  - `Email`: Niektórzy użytkownicy mogą nie podawać adresu e-mail, więc pole to jest opcjonalne.
+### **d. Indeksy dla Poprawy Wydajności**
 
-- **Adresses:**
-  - `Street`: Może być puste w przypadku adresów bez nazwy ulicy.
-  - `AppartmentNumber`: Nie każdy adres ma numer mieszkania, więc pole to jest opcjonalne.
+#### **Definicja:**
+Indeksy są strukturami danych, które przyspieszają wyszukiwanie i sortowanie danych w tabelach.
 
-- **Students:**
-  - `Age`: Może być obliczane na podstawie `DateOfBirth`, ale jest przechowywane jako pole opcjonalne dla szybszego dostępu.
+#### **Przykłady:**
+- **Tabela `Users`:**
+  - `Login_UNIQUE` i `Email_UNIQUE` przyspieszają wyszukiwanie użytkowników po loginie lub e-mailu.
+- **Tabela `Presences`:**
+  - `FKPresenceIdStudent_idx` przyspiesza wyszukiwanie obecności danego ucznia.
+- **Tabela `Lessons`:**
+  - `IdSchoolSubject_idx` i `IdClass_idx` przyspieszają wyszukiwanie lekcji po przedmiocie i klasie.
+- **Tabela `Grades`:**
+  - `IdSubject_idx`, `FKGradesIdUserStudent_idx`, `FKGradesIdUserTeacher_idx` przyspieszają wyszukiwanie ocen po przedmiocie, uczniu i nauczycielu.
+- **Tabela `PostCodes`:**
+  - `PostCode_UNIQUE` zapewnia szybki dostęp i unikalność kodów pocztowych.
 
-- **ParentsStudentPairs:**
-  - `Description` w tabeli `PhoneNumbersParentsMatch` jest opcjonalnym polem, umożliwiającym dodanie dodatkowych informacji.
+### **e. Ograniczenia Spójności**
+
+#### **Sprawdzanie Typów Danych**
+- **Definicja:** Upewnienie się, że dane wprowadzane do tabel są zgodne z określonymi typami danych.
+- **Przykład:**
+  - `Gender` w tabeli `Students` jest typu `ENUM('male', 'female', 'other')`, co zapewnia, że tylko dozwolone wartości mogą być wprowadzone.
+
+#### **Not Null**
+- **Definicja:** Zapewnienie, że kluczowe pola nie mogą być puste.
+- **Przykład:**
+  - `Login` w tabeli `Users` jest oznaczone jako `NOT NULL`, co gwarantuje, że każdy użytkownik ma przypisany login.
+  - `IdAddress` w tabeli `Users` jest oznaczone jako `NOT NULL`, co gwarantuje, że każdy użytkownik ma przypisany adres.
+  - `IdUser` w tabeli `Students` jest oznaczone jako `NOT NULL`, co gwarantuje, że każdy uczeń jest powiązany z istniejącym użytkownikiem.
+  - `IdClass` w tabeli `Students` jest oznaczone jako `NOT NULL`, co gwarantuje, że każdy uczeń jest przypisany do istniejącej klasy.
+
+#### **Dodatkowe Ograniczenia:**
+- `Description` w tabeli `PhoneNumbersParentsMatch` jest oznaczone jako `NOT NULL`, co gwarantuje, że każde powiązanie numeru telefonu z rodzicem zawiera opis.
 
 ## 2. **Mechanizmy Zapewniające Poprawność Przechowywanych Informacji**
 
@@ -216,11 +272,14 @@ Normalizacja to proces organizowania danych w bazie danych, aby zmniejszyć redu
 - **Definicja:** Unikalny identyfikator każdego rekordu w tabeli.
 - **Przykład:**
   - Tabela `Users` ma klucz główny `IdUser`, który jednoznacznie identyfikuje każdego użytkownika.
+  - Tabela `Presences` ma klucz główny `IdPresence`, który jednoznacznie identyfikuje każdy wpis frekwencji.
 
 #### **Indeksy Unikalne (`UNIQUE INDEX`)**
 - **Definicja:** Zapewniają, że wartości w określonych kolumnach są unikalne.
 - **Przykład:**
   - `Login_UNIQUE` w tabeli `Users` gwarantuje, że każdy login jest unikalny, zapobiegając duplikatom.
+  - `Email_UNIQUE` w tabeli `Users` gwarantuje, że każdy adres e-mail jest unikalny.
+  - `PostCode_UNIQUE` w tabeli `PostCodes` zapewnia unikalność każdego kodu pocztowego.
 
 ### **c. Klucze Obce i Integralność Referencyjna**
 
@@ -228,12 +287,22 @@ Normalizacja to proces organizowania danych w bazie danych, aby zmniejszyć redu
 - **Definicja:** Odniesienie do klucza głównego w innej tabeli, zapewniające, że relacje między tabelami są spójne.
 - **Przykład:**
   - `IdUser` w tabeli `Students` jest kluczem obcym odnoszącym się do `Users(IdUser)`.
-  - **Jak to działa:** Zapewnia, że każdy student jest powiązany z istniejącym użytkownikiem w tabeli `Users`. Nie można dodać studenta bez istniejącego użytkownika, co zapobiega niespójnym danym.
+  - `IdAddress` w tabeli `Users` jest kluczem obcym odnoszącym się do `Adresses(IdAddress)`.
+  - `IdClass` w tabeli `Students` jest kluczem obcym odnoszącym się do `Classes(IdClass)`.
+  - `IdSchoolSubject` w tabeli `Lessons` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
+  - `IdTeacher` w tabeli `Lessons` jest kluczem obcym odnoszącym się do `Teachers(IdTeacher)`.
+  - `IdSubject` w tabeli `Grades` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
+  - **Jak to działa:** Zapewnia, że każdy rekord w tabeli zależnej (np. `Students`, `Grades`, `Lessons`) jest powiązany z istniejącym rekordem w tabeli głównej (np. `Users`, `Classes`, `SchoolSubjects`, `Teachers`). Nie można dodać rekordu do tabeli zależnej bez istniejącego odpowiednika w tabeli głównej, co zapobiega niespójnym danym.
 
 #### **Przykład Relacji z Kluczem Obcym**
 - **Tabela `Grades`:**
   - `IdSubject` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
   - **Jak to działa:** Każda ocena musi być przypisana do istniejącego przedmiotu. Nie można wprowadzić oceny dla przedmiotu, który nie istnieje w tabeli `SchoolSubjects`.
+
+- **Tabela `Presences`:**
+  - `IdLesson` jest kluczem obcym odnoszącym się do `Lessons(IdLesson)`.
+  - `IdStudent` jest kluczem obcym odnoszącym się do `Students(IdStudent)`.
+  - **Jak to działa:** Zapewnia, że każda frekwencja odnosi się do istniejącej lekcji i istniejącego ucznia. Nie można dodać wpisu frekwencji dla nieistniejącej lekcji lub ucznia.
 
 ### **d. Indeksy dla Poprawy Wydajności**
 
@@ -244,171 +313,13 @@ Indeksy są strukturami danych, które przyspieszają wyszukiwanie i sortowanie 
 - **Tabela `Users`:**
   - `Login_UNIQUE` i `Email_UNIQUE` przyspieszają wyszukiwanie użytkowników po loginie lub e-mailu.
 - **Tabela `Presences`:**
-  - `FKPresenceIdStudent_idx` przyspiesza wyszukiwanie obecności danego studenta.
-
-### **e. Ograniczenia Spójności**
-
-#### **Sprawdzanie Typów Danych**
-- **Definicja:** Upewnienie się, że dane wprowadzane do tabel są zgodne z określonymi typami danych.
-- **Przykład:**
-  - `Gender` w tabeli `Students` jest typu `ENUM('male', 'female', 'other')`, co zapewnia, że tylko dozwolone wartości mogą być wprowadzone.
-
-#### **Not Null**
-- **Definicja:** Zapewnienie, że kluczowe pola nie mogą być puste.
-- **Przykład:**
-  - `Login` w tabeli `Users` jest oznaczone jako `NOT NULL`, co gwarantuje, że każdy użytkownik ma przypisany login.
-
-## 2. **Mechanizmy Zapewniające Poprawność Przechowywanych Informacji**
-
-### **a. Normalizacja Bazy Danych**
-
-Normalizacja to proces organizowania danych w bazie danych, aby zmniejszyć redundancję i zapewnić spójność. Baza `school_normalized` została zaprojektowana zgodnie z trzema pierwszymi formami normalnymi (1NF, 2NF, 3NF).
-
-#### **Pierwsza Postać Normalna (1NF)**
-- **Definicja:** Wszystkie tabele mają klucz główny, a wszystkie atrybuty zawierają tylko jedną wartość (wartości atomowe).
-- **Przykład:**
-  - **Tabela `Users`:**
-    - Każdy rekord ma unikalny `IdUser`.
-    - Atrybuty takie jak `FirstName` czy `Surname` zawierają tylko jedną wartość dla każdego rekordu, np. `FirstName = "Jan"`, `Surname = "Kowalski"`.
-
-#### **Druga Postać Normalna (2NF)**
-- **Definicja:** Baza jest w 2NF, jeśli jest w 1NF i wszystkie atrybuty niekluczowe są w pełni zależne od klucza głównego.
-- **Przykład:**
-  - **Tabela `Grades`:**
-    - Klucz główny to `IdGrade`.
-    - Atrybuty takie jak `NumberGrade`, `Description`, `Date` są w pełni zależne od `IdGrade`.
-    - Nie ma częściowych zależności, ponieważ `IdGrade` jest pojedynczym atrybutem.
-
-#### **Trzecia Postać Normalna (3NF)**
-- **Definicja:** Baza jest w 3NF, jeśli jest w 2NF i nie ma zależności przechodnich między atrybutami.
-- **Przykład:**
-  - **Tabela `Users`:**
-    - `Role` zależy bezpośrednio od `IdUser`, a nie przez inny atrybut.
-    - Nie ma zależności, w których jeden atrybut niekluczowy zależy od innego atrybutu niekluczowego.
-
-### **b. Klucze Główne i Unikalne Ograniczenia**
-
-#### **Klucze Główne (`PRIMARY KEY`)**
-- **Definicja:** Unikalny identyfikator każdego rekordu w tabeli.
-- **Przykład:**
-  - Tabela `Users` ma klucz główny `IdUser`, który jednoznacznie identyfikuje każdego użytkownika.
-
-#### **Indeksy Unikalne (`UNIQUE INDEX`)**
-- **Definicja:** Zapewniają, że wartości w określonych kolumnach są unikalne.
-- **Przykład:**
-  - `Login_UNIQUE` w tabeli `Users` gwarantuje, że każdy login jest unikalny, zapobiegając duplikatom.
-
-### **c. Klucze Obce i Integralność Referencyjna**
-
-#### **Klucze Obce (`FOREIGN KEY`)**
-- **Definicja:** Odniesienie do klucza głównego w innej tabeli, zapewniające, że relacje między tabelami są spójne.
-- **Przykład:**
-  - `IdUser` w tabeli `Students` jest kluczem obcym odnoszącym się do `Users(IdUser)`.
-  - **Jak to działa:** Zapewnia, że każdy student jest powiązany z istniejącym użytkownikiem w tabeli `Users`. Nie można dodać studenta bez istniejącego użytkownika, co zapobiega niespójnym danym.
-
-#### **Przykład Relacji z Kluczem Obcym**
+  - `FKPresenceIdStudent_idx` przyspiesza wyszukiwanie obecności danego ucznia.
+- **Tabela `Lessons`:**
+  - `IdSchoolSubject_idx` i `IdClass_idx` przyspieszają wyszukiwanie lekcji po przedmiocie i klasie.
 - **Tabela `Grades`:**
-  - `IdSubject` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
-  - **Jak to działa:** Każda ocena musi być przypisana do istniejącego przedmiotu. Nie można wprowadzić oceny dla przedmiotu, który nie istnieje w tabeli `SchoolSubjects`.
-
-### **d. Indeksy dla Poprawy Wydajności**
-
-#### **Definicja:**
-Indeksy są strukturami danych, które przyspieszają wyszukiwanie i sortowanie danych w tabelach.
-
-#### **Przykłady:**
-- **Tabela `Users`:**
-  - `Login_UNIQUE` i `Email_UNIQUE` przyspieszają wyszukiwanie użytkowników po loginie lub e-mailu.
-- **Tabela `Presences`:**
-  - `FKPresenceIdStudent_idx` przyspiesza wyszukiwanie obecności danego studenta.
-
-### **e. Ograniczenia Spójności**
-
-#### **Sprawdzanie Typów Danych**
-- **Definicja:** Upewnienie się, że dane wprowadzane do tabel są zgodne z określonymi typami danych.
-- **Przykład:**
-  - `Gender` w tabeli `Students` jest typu `ENUM('male', 'female', 'other')`, co zapewnia, że tylko dozwolone wartości mogą być wprowadzone.
-
-#### **Not Null**
-- **Definicja:** Zapewnienie, że kluczowe pola nie mogą być puste.
-- **Przykład:**
-  - `Login` w tabeli `Users` jest oznaczone jako `NOT NULL`, co gwarantuje, że każdy użytkownik ma przypisany login.
-
-## 2. **Mechanizmy Zapewniające Poprawność Przechowywanych Informacji**
-
-### **a. Normalizacja Bazy Danych**
-
-Normalizacja to proces organizowania danych w bazie danych, aby zmniejszyć redundancję i zapewnić spójność. Baza `school_normalized` została zaprojektowana zgodnie z trzema pierwszymi formami normalnymi (1NF, 2NF, 3NF).
-
-#### **Pierwsza Postać Normalna (1NF)**
-- **Definicja:** Wszystkie tabele mają klucz główny, a wszystkie atrybuty zawierają tylko jedną wartość (wartości atomowe).
-- **Przykład:**
-  - **Tabela `Users`:**
-    - Każdy rekord ma unikalny `IdUser`.
-    - Atrybuty takie jak `FirstName` czy `Surname` zawierają tylko jedną wartość dla każdego rekordu, np. `FirstName = "Jan"`, `Surname = "Kowalski"`.
-
-#### **Druga Postać Normalna (2NF)**
-- **Definicja:** Baza jest w 2NF, jeśli jest w 1NF i wszystkie atrybuty niekluczowe są w pełni zależne od klucza głównego.
-- **Przykład:**
-  - **Tabela `Grades`:**
-    - Klucz główny to `IdGrade`.
-    - Atrybuty takie jak `NumberGrade`, `Description`, `Date` są w pełni zależne od `IdGrade`.
-    - Nie ma częściowych zależności, ponieważ `IdGrade` jest pojedynczym atrybutem.
-
-#### **Trzecia Postać Normalna (3NF)**
-- **Definicja:** Baza jest w 3NF, jeśli jest w 2NF i nie ma zależności przechodnich między atrybutami.
-- **Przykład:**
-  - **Tabela `Users`:**
-    - `Role` zależy bezpośrednio od `IdUser`, a nie przez inny atrybut.
-    - Nie ma zależności, w których jeden atrybut niekluczowy zależy od innego atrybutu niekluczowego.
-
-### **b. Klucze Główne i Unikalne Ograniczenia**
-
-#### **Klucze Główne (`PRIMARY KEY`)**
-- **Definicja:** Unikalny identyfikator każdego rekordu w tabeli.
-- **Przykład:**
-  - Tabela `Users` ma klucz główny `IdUser`, który jednoznacznie identyfikuje każdego użytkownika.
-
-#### **Indeksy Unikalne (`UNIQUE INDEX`)**
-- **Definicja:** Zapewniają, że wartości w określonych kolumnach są unikalne.
-- **Przykład:**
-  - `Login_UNIQUE` w tabeli `Users` gwarantuje, że każdy login jest unikalny, zapobiegając duplikatom.
-
-### **c. Klucze Obce i Integralność Referencyjna**
-
-#### **Klucze Obce (`FOREIGN KEY`)**
-- **Definicja:** Odniesienie do klucza głównego w innej tabeli, zapewniające, że relacje między tabelami są spójne.
-- **Przykład:**
-  - `IdUser` w tabeli `Students` jest kluczem obcym odnoszącym się do `Users(IdUser)`.
-  - **Jak to działa:** Zapewnia, że każdy student jest powiązany z istniejącym użytkownikiem w tabeli `Users`. Nie można dodać studenta bez istniejącego użytkownika, co zapobiega niespójnym danym.
-
-#### **Przykład Relacji z Kluczem Obcym**
-- **Tabela `Grades`:**
-  - `IdSubject` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
-  - **Jak to działa:** Każda ocena musi być przypisana do istniejącego przedmiotu. Nie można wprowadzić oceny dla przedmiotu, który nie istnieje w tabeli `SchoolSubjects`.
-
-### **d. Indeksy dla Poprawy Wydajności**
-
-#### **Definicja:**
-Indeksy są strukturami danych, które przyspieszają wyszukiwanie i sortowanie danych w tabelach.
-
-#### **Przykłady:**
-- **Tabela `Users`:**
-  - `Login_UNIQUE` i `Email_UNIQUE` przyspieszają wyszukiwanie użytkowników po loginie lub e-mailu.
-- **Tabela `Presences`:**
-  - `FKPresenceIdStudent_idx` przyspiesza wyszukiwanie obecności danego studenta.
-
-### **e. Ograniczenia Spójności**
-
-#### **Sprawdzanie Typów Danych**
-- **Definicja:** Upewnienie się, że dane wprowadzane do tabel są zgodne z określonymi typami danych.
-- **Przykład:**
-  - `Gender` w tabeli `Students` jest typu `ENUM('male', 'female', 'other')`, co zapewnia, że tylko dozwolone wartości mogą być wprowadzone.
-
-#### **Not Null**
-- **Definicja:** Zapewnienie, że kluczowe pola nie mogą być puste.
-- **Przykład:**
-  - `Login` w tabeli `Users` jest oznaczone jako `NOT NULL`, co gwarantuje, że każdy użytkownik ma przypisany login.
+  - `IdSubject_idx`, `FKGradesIdUserStudent_idx`, `FKGradesIdUserTeacher_idx` przyspieszają wyszukiwanie ocen po przedmiocie, uczniu i nauczycielu.
+- **Tabela `PostCodes`:**
+  - `PostCode_UNIQUE` zapewnia szybki dostęp i unikalność kodów pocztowych.
 
 ## 3. **Kontrola Dostępu do Danych**
 
@@ -429,7 +340,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
   - **SELECT:** Dostęp do tabeli `Messages` oraz `MessageUserReceiverPairs` w zakresie odczytu wiadomości.
   - **INSERT:** Dodawanie nowych wiadomości do tabeli `Messages` oraz tworzenie powiązań w `MessageUserReceiverPairs`.
 
-#### **2. Uczeń**
+#### **2. Uczeń (Students)**
 - **Funkcje:**
   - Przeglądanie swoich ocen.
   - Przeglądanie swoich średnich.
@@ -437,7 +348,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
   - Przeglądanie swojego planu lekcji.
 - **Uprawnienia:**
   - **SELECT:** Dostęp do tabel `Grades`, `Presences`, `Lessons` w zakresie tylko swoich danych.
-  - **SELECT:** Dostęp do swoich własnych rekordów w tabeli `Users`.
+  - **SELECT:** Dostęp do swoich rekordów w tabeli `Users`.
 
 #### **3. Rodzic**
 - **Funkcje:**
@@ -493,7 +404,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
 - **UPDATE:** Umożliwia modyfikowanie istniejących rekordów.
 - **DELETE:** Pozwala na usuwanie rekordów z tabel.
 
-**Przykład:**
+**Przykład:** 
 - Administrator danych może mieć przyznane wszystkie uprawnienia (`SELECT`, `INSERT`, `UPDATE`, `DELETE`) na tabeli `Users`, co pozwala mu na zarządzanie użytkownikami.
 - Uczeń ma tylko `SELECT` na tabelach `Grades` i `Presences`, co pozwala mu na przeglądanie swoich ocen i frekwencji, ale nie na ich modyfikację.
 
@@ -537,7 +448,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
 - **Opis:** Opracowanie procedur odzyskiwania danych w przypadku awarii systemu lub ataku.
 - **Przykład:** W przypadku awarii serwera, zespół IT ma przygotowany plan, który obejmuje przywrócenie bazy danych z ostatniej kopii zapasowej i minimalizację przestojów.
 
-## 3. **Przykłady Form Normalnych w Bazie `school_normalized`**
+## 4. **Przykłady Form Normalnych w Bazie `school_normalized`**
 
 ### **Pierwsza Postać Normalna (1NF)**
 - **Definicja:** Wszystkie tabele mają klucz główny, a wszystkie atrybuty zawierają tylko jedną wartość (wartości atomowe).
@@ -561,11 +472,11 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
     - `Role` zależy bezpośrednio od `IdUser`, a nie przez inny atrybut.
     - Nie ma zależności, w których jeden atrybut niekluczowy zależy od innego atrybutu niekluczowego.
 
-### **Relacja Presences do Lekcji i Studentów (0:N)**
+### **Relacja Presences do Lekcji i Uczniów (0:N)**
 - **Opis:** Tabela `Presences` ma relację wiele do jednego (N:1) z tabelami `Lessons` i `Students`.
 - **Przykład:**
   - **Lekcja bez obecności:** Na początku roku szkolnego nie ma żadnych wpisów w tabeli `Presences` dla danej lekcji.
-  - **Lekcja z obecnościami:** Lekcja `IdLesson = 1` może mieć wiele wpisów w tabeli `Presences`, np. `IdPresence = 1, 2, 3` dla różnych studentów.
+  - **Lekcja z obecnościami:** Lekcja `IdLesson = 1` może mieć wiele wpisów w tabeli `Presences`, np. `IdPresence = 1, 2, 3` dla różnych uczniów.
 
 ### **Pola Opcjonalne w Tabelach**
 - **Users:**
@@ -573,18 +484,19 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
   - `Email`: Niektórzy użytkownicy mogą nie podawać adresu e-mail, więc pole to jest opcjonalne.
   
 - **Adresses:**
-  - `Street`: Może być puste w przypadku adresów bez nazwy ulicy.
-  - `AppartmentNumber`: Nie każdy adres ma numer mieszkania, więc pole to jest opcjonalne.
+  - `Street` (opcjonalne): Może być puste w przypadku adresów bez nazwy ulicy.
+  - `AdditionalBuildingIdentifier` (opcjonalny): Opcjonalne pole umożliwiające dodanie dodatkowego identyfikatora budynku.
+  - `AppartmentNumber` (opcjonalny): Nie każdy adres ma numer mieszkania, więc pole to jest opcjonalne.
 
 - **Students:**
-  - `Age`: Może być obliczane na podstawie `DateOfBirth`, ale jest przechowywane jako pole opcjonalne dla szybszego dostępu.
+  - `Age`: Jest przechowywane jako pole wymagane, ale może być obliczane na podstawie `DateOfBirth` dla szybszego dostępu.
 
-- **ParentsStudentPairs:**
-  - `Description` w tabeli `PhoneNumbersParentsMatch` jest opcjonalnym polem, umożliwiającym dodanie dodatkowych informacji.
+- **PhoneNumbersParentsMatch:**
+  - `Description`: Opcjonalne pole umożliwiające dodanie dodatkowych informacji do powiązań numerów telefonów z rodzicami.
 
-## 4. **Use Cases i Role Użytkowników**
+## 5. **Use Cases i Role Użytkowników**
 
-### **a. Uczeń**
+### **a. Uczeń (Students)**
 - **Funkcje:**
   - Przeglądanie swoich ocen.
   - Przeglądanie swoich średnich.
@@ -593,7 +505,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
 - **Uprawnienia:**
   - **SELECT:** Dostęp do tabel `Grades`, `Presences`, `Lessons` w zakresie tylko swoich danych.
   - **SELECT:** Dostęp do swoich rekordów w tabeli `Users`.
-  
+
 ### **b. Rodzic**
 - **Funkcje:**
   - Wszystko, co uczeń.
@@ -610,13 +522,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
   - **SELECT, INSERT, UPDATE:** Dostęp do tabel `Grades` i `Presences` w zakresie przypisanych im przedmiotów i klas.
   - **SELECT:** Dostęp do tabel `Students` i `Lessons` dla swoich klas.
 
-### **d. Administrator Danych**
-- **Funkcje:**
-  - Zarządzanie użytkownikami.
-- **Uprawnienia:**
-  - **SELECT, INSERT, UPDATE, DELETE:** Dostęp do tabel `Users`, `Students`, `Parents`, `Teachers`, oraz powiązanych tabel.
-
-### **e. Dyrektor**
+### **d. Dyrektor**
 - **Funkcje:**
   - Wszystko, co nauczyciel.
   - Wszystko, co administrator danych.
@@ -625,6 +531,12 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
 - **Uprawnienia:**
   - **SELECT, INSERT, UPDATE, DELETE:** Dostęp do wszystkich tabel związanych z ocenami, obecnościami, przedmiotami i lekcjami.
   - **SELECT, INSERT, UPDATE, DELETE:** Dostęp do tabel `Users`, `Classes`, `SchoolSubjects`, `Lessons`.
+
+### **e. Administrator Danych**
+- **Funkcje:**
+  - Zarządzanie użytkownikami.
+- **Uprawnienia:**
+  - **SELECT, INSERT, UPDATE, DELETE:** Dostęp do tabel `Users`, `Students`, `Parents`, `Teachers`, oraz powiązanych tabel.
 
 ### **f. Administrator Techniczny**
 - **Funkcje:**
@@ -642,7 +554,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
   - **SELECT:** Dostęp do tabeli `Messages` oraz `MessageUserReceiverPairs` w zakresie odczytu wiadomości.
   - **INSERT:** Dodawanie nowych wiadomości do tabeli `Messages` oraz tworzenie powiązań w `MessageUserReceiverPairs`.
 
-## 5. **Podsumowanie**
+## 6. **Podsumowanie**
 
 Projektowanie bazy danych `school_normalized` z zachowaniem trzeciej postaci normalnej (3NF) zapewnia strukturę, która minimalizuje redundancję i utrzymuje integralność danych. Klucze główne i obce odgrywają kluczową rolę w utrzymaniu spójności danych, zapewniając, że relacje między tabelami są zawsze poprawne. Indeksy poprawiają wydajność zapytań, a ograniczenia takie jak `NOT NULL` i typy danych zapewniają, że dane są przechowywane w odpowiednim formacie.
 
