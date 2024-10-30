@@ -11,10 +11,10 @@
   - `Login`: Nazwa użytkownika do logowania.
   - `HashedPassword`: Hasło użytkownika w postaci zaszyfrowanej.
   - `Email`: Adres e-mail użytkownika (opcjonalny).
-  - `IsAdmin`: Flaga wskazująca, czy użytkownik ma uprawnienia administratora.
+  - `Role`: Rola użytkownika (ENUM('student','parent','teacher','headmaster','admin') domyślnie 'student').
   - `FirstName`, `SecondName`, `Surname`: Imię, drugie imię i nazwisko użytkownika.
   - `IdAddress` (FK): Odniesienie do adresu w tabeli `Adresses`.
-  - `Role`: Rola użytkownika w systemie (np. uczeń, nauczyciel, rodzic, admin).
+  
 
 #### **2. PostCodes (Kody Pocztowe)**
 - **Przeznaczenie:** Zawiera kody pocztowe wraz z nazwami regionów, takich jak miasta, przedmieścia czy wsie.
@@ -173,6 +173,9 @@
 - **Presences → Lessons:**
   - Lekcja (`Lessons`) może mieć wiele wpisów obecności (`Presences`), ale na początku roku szkolnego mogą nie istnieć żadne wpisy.
   - **Przykład:** Lekcja `IdLesson = 1` może mieć obecności `IdPresence = 1, 2, 3`, ale lekcja `IdLesson = 2` może nie mieć żadnych wpisów obecności.
+- **Grades → Students:**
+  - Uczeń (`Students`) może mieć wiele ocen (`Grades`), ale na początku roku szkolnego może nie mieć żadnych ocen.
+  - **Przykład:** Uczeń `IdStudent = 1` może mieć oceny `IdGrade = 1, 2, 3`, ale uczeń `IdStudent = 2` może nie mieć żadnych ocen.
 
 ### **c. Klucze Obce i Spójność Danych**
 
@@ -192,51 +195,6 @@
   - `IdStudent` jest kluczem obcym odnoszącym się do `Students(IdStudent)`.
   - `IdTeacher` jest kluczem obcym odnoszącym się do `Teachers(IdTeacher)`.
   - **Jak to działa:** Każda ocena musi być przypisana do istniejącego przedmiotu, ucznia i nauczyciela. Nie można wprowadzić oceny dla przedmiotu, ucznia lub nauczyciela, który nie istnieje w odpowiednich tabelach.
-
-#### **2. Przykład Relacji z Kluczem Obcym**
-- **Tabela `Grades`:**
-  - `IdSubject` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
-  - **Jak to działa:** Każda ocena musi być przypisana do istniejącego przedmiotu. Nie można wprowadzić oceny dla przedmiotu, który nie istnieje w tabeli `SchoolSubjects`.
-
-- **Tabela `TeachersTeachingSubjects`:**
-  - `IdTeacher` jest kluczem obcym odnoszącym się do `Teachers(IdTeacher)`.
-  - `IdSchoolSubject` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
-  - **Jak to działa:** Zapewnia, że każdy nauczyciel może być przypisany tylko do istniejących przedmiotów i odwrotnie.
-
-### **d. Indeksy dla Poprawy Wydajności**
-
-#### **Definicja:**
-Indeksy są strukturami danych, które przyspieszają wyszukiwanie i sortowanie danych w tabelach.
-
-#### **Przykłady:**
-- **Tabela `Users`:**
-  - `Login_UNIQUE` i `Email_UNIQUE` przyspieszają wyszukiwanie użytkowników po loginie lub e-mailu.
-- **Tabela `Presences`:**
-  - `FKPresenceIdStudent_idx` przyspiesza wyszukiwanie obecności danego ucznia.
-- **Tabela `Lessons`:**
-  - `IdSchoolSubject_idx` i `IdClass_idx` przyspieszają wyszukiwanie lekcji po przedmiocie i klasie.
-- **Tabela `Grades`:**
-  - `IdSubject_idx`, `FKGradesIdUserStudent_idx`, `FKGradesIdUserTeacher_idx` przyspieszają wyszukiwanie ocen po przedmiocie, uczniu i nauczycielu.
-- **Tabela `PostCodes`:**
-  - `PostCode_UNIQUE` zapewnia szybki dostęp i unikalność kodów pocztowych.
-
-### **e. Ograniczenia Spójności**
-
-#### **Sprawdzanie Typów Danych**
-- **Definicja:** Upewnienie się, że dane wprowadzane do tabel są zgodne z określonymi typami danych.
-- **Przykład:**
-  - `Gender` w tabeli `Students` jest typu `ENUM('male', 'female', 'other')`, co zapewnia, że tylko dozwolone wartości mogą być wprowadzone.
-
-#### **Not Null**
-- **Definicja:** Zapewnienie, że kluczowe pola nie mogą być puste.
-- **Przykład:**
-  - `Login` w tabeli `Users` jest oznaczone jako `NOT NULL`, co gwarantuje, że każdy użytkownik ma przypisany login.
-  - `IdAddress` w tabeli `Users` jest oznaczone jako `NOT NULL`, co gwarantuje, że każdy użytkownik ma przypisany adres.
-  - `IdUser` w tabeli `Students` jest oznaczone jako `NOT NULL`, co gwarantuje, że każdy uczeń jest powiązany z istniejącym użytkownikiem.
-  - `IdClass` w tabeli `Students` jest oznaczone jako `NOT NULL`, co gwarantuje, że każdy uczeń jest przypisany do istniejącej klasy.
-
-#### **Dodatkowe Ograniczenia:**
-- `Description` w tabeli `PhoneNumbersParentsMatch` jest oznaczone jako `NOT NULL`, co gwarantuje, że każde powiązanie numeru telefonu z rodzicem zawiera opis.
 
 ## 2. **Mechanizmy Zapewniające Poprawność Przechowywanych Informacji**
 
@@ -263,8 +221,7 @@ Normalizacja to proces organizowania danych w bazie danych, aby zmniejszyć redu
 - **Definicja:** Baza jest w 3NF, jeśli jest w 2NF i nie ma zależności przechodnich między atrybutami.
 - **Przykład:**
   - **Tabela `Users`:**
-    - `Role` zależy bezpośrednio od `IdUser`, a nie przez inny atrybut.
-    - Nie ma zależności, w których jeden atrybut niekluczowy zależy od innego atrybutu niekluczowego.
+    - Atrybuty `FirstName`, `SecondName`, `Surname` są zależne tylko od `IdUser`.
 
 ### **b. Klucze Główne i Unikalne Ograniczenia**
 
@@ -294,33 +251,6 @@ Normalizacja to proces organizowania danych w bazie danych, aby zmniejszyć redu
   - `IdSubject` w tabeli `Grades` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
   - **Jak to działa:** Zapewnia, że każdy rekord w tabeli zależnej (np. `Students`, `Grades`, `Lessons`) jest powiązany z istniejącym rekordem w tabeli głównej (np. `Users`, `Classes`, `SchoolSubjects`, `Teachers`). Nie można dodać rekordu do tabeli zależnej bez istniejącego odpowiednika w tabeli głównej, co zapobiega niespójnym danym.
 
-#### **Przykład Relacji z Kluczem Obcym**
-- **Tabela `Grades`:**
-  - `IdSubject` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
-  - **Jak to działa:** Każda ocena musi być przypisana do istniejącego przedmiotu. Nie można wprowadzić oceny dla przedmiotu, który nie istnieje w tabeli `SchoolSubjects`.
-
-- **Tabela `Presences`:**
-  - `IdLesson` jest kluczem obcym odnoszącym się do `Lessons(IdLesson)`.
-  - `IdStudent` jest kluczem obcym odnoszącym się do `Students(IdStudent)`.
-  - **Jak to działa:** Zapewnia, że każda frekwencja odnosi się do istniejącej lekcji i istniejącego ucznia. Nie można dodać wpisu frekwencji dla nieistniejącej lekcji lub ucznia.
-
-### **d. Indeksy dla Poprawy Wydajności**
-
-#### **Definicja:**
-Indeksy są strukturami danych, które przyspieszają wyszukiwanie i sortowanie danych w tabelach.
-
-#### **Przykłady:**
-- **Tabela `Users`:**
-  - `Login_UNIQUE` i `Email_UNIQUE` przyspieszają wyszukiwanie użytkowników po loginie lub e-mailu.
-- **Tabela `Presences`:**
-  - `FKPresenceIdStudent_idx` przyspiesza wyszukiwanie obecności danego ucznia.
-- **Tabela `Lessons`:**
-  - `IdSchoolSubject_idx` i `IdClass_idx` przyspieszają wyszukiwanie lekcji po przedmiocie i klasie.
-- **Tabela `Grades`:**
-  - `IdSubject_idx`, `FKGradesIdUserStudent_idx`, `FKGradesIdUserTeacher_idx` przyspieszają wyszukiwanie ocen po przedmiocie, uczniu i nauczycielu.
-- **Tabela `PostCodes`:**
-  - `PostCode_UNIQUE` zapewnia szybki dostęp i unikalność kodów pocztowych.
-
 ## 3. **Kontrola Dostępu do Danych**
 
 ### **a. Uwierzytelnianie Użytkowników**
@@ -340,7 +270,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
   - **SELECT:** Dostęp do tabeli `Messages` oraz `MessageUserReceiverPairs` w zakresie odczytu wiadomości.
   - **INSERT:** Dodawanie nowych wiadomości do tabeli `Messages` oraz tworzenie powiązań w `MessageUserReceiverPairs`.
 
-#### **2. Uczeń (Students)**
+#### **2. Uczeń (ENUM('student'))**
 - **Funkcje:**
   - Przeglądanie swoich ocen.
   - Przeglądanie swoich średnich.
@@ -350,7 +280,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
   - **SELECT:** Dostęp do tabel `Grades`, `Presences`, `Lessons` w zakresie tylko swoich danych.
   - **SELECT:** Dostęp do swoich rekordów w tabeli `Users`.
 
-#### **3. Rodzic**
+#### **3. Rodzic(ENUM('parent'))**
 - **Funkcje:**
   - Wszystko, co uczeń.
   - Usprawiedliwianie nieobecności swojego dziecka.
@@ -358,7 +288,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
   - **SELECT:** Dostęp do danych dziecka w tabelach `Grades`, `Presences`, `Lessons`.
   - **UPDATE:** Możliwość aktualizacji wpisów obecności swojego dziecka w tabeli `Presences`.
 
-#### **4. Nauczyciel**
+#### **4. Nauczyciel(ENUM('teacher'))**
 - **Funkcje:**
   - Zarządzanie obecnościami.
   - Zarządzanie ocenami.
@@ -366,7 +296,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
   - **SELECT, INSERT, UPDATE:** Dostęp do tabel `Grades` i `Presences` w zakresie przypisanych im przedmiotów i klas.
   - **SELECT:** Dostęp do tabel `Students` i `Lessons` dla swoich klas.
 
-#### **5. Dyrektor**
+#### **5. Dyrektor(ENUM('headmaster'))**
 - **Funkcje:**
   - Wszystko, co nauczyciel.
   - Wszystko, co administrator danych.
@@ -376,13 +306,13 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
   - **SELECT, INSERT, UPDATE, DELETE:** Dostęp do wszystkich tabel związanych z ocenami, obecnościami, przedmiotami i lekcjami.
   - **SELECT, INSERT, UPDATE, DELETE:** Dostęp do tabel `Users`, `Classes`, `SchoolSubjects`, `Lessons`.
 
-#### **6. Administrator Danych**
+#### **6. Administrator Danych(nie jako rola ale jako część wspólna uprawnień dyrektora i administratora technicznego)**
 - **Funkcje:**
   - Zarządzanie użytkownikami.
 - **Uprawnienia:**
   - **SELECT, INSERT, UPDATE, DELETE:** Dostęp do tabel `Users`, `Students`, `Parents`, `Teachers`, oraz powiązanych tabel.
 
-#### **7. Administrator Techniczny**
+#### **7. Administrator TechnicznyENUM('admin')**
 - **Funkcje:**
   - Wszystko, co administrator danych.
   - Zarządzanie kopiami zapasowymi.
@@ -408,27 +338,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
 - Administrator danych może mieć przyznane wszystkie uprawnienia (`SELECT`, `INSERT`, `UPDATE`, `DELETE`) na tabeli `Users`, co pozwala mu na zarządzanie użytkownikami.
 - Uczeń ma tylko `SELECT` na tabelach `Grades` i `Presences`, co pozwala mu na przeglądanie swoich ocen i frekwencji, ale nie na ich modyfikację.
 
-### **d. Szyfrowanie Danych**
-
-#### **1. Szyfrowanie Transmisji**
-- **Opis:** Dane przesyłane między klientem a serwerem są szyfrowane za pomocą protokołów takich jak SSL/TLS.
-- **Przykład:** Podczas logowania użytkownik wprowadza swoje `Login` i `HashedPassword` w bezpiecznym połączeniu, co chroni je przed przechwyceniem.
-
-#### **2. Szyfrowanie Danych Wrażliwych**
-- **Opis:** Dane takie jak hasła są przechowywane w postaci zaszyfrowanej.
-- **Przykład:** `HashedPassword` w tabeli `Users` jest przechowywany jako zaszyfrowany ciąg znaków, co zabezpiecza je przed dostępem osób niepowołanych.
-
-### **e. Audyt i Monitorowanie**
-
-#### **1. Logowanie Działań**
-- **Opis:** Rejestrowanie operacji wykonywanych przez użytkowników w systemie.
-- **Przykład:** Każde dodanie nowej oceny przez nauczyciela jest logowane w systemie audytu, co umożliwia śledzenie zmian i identyfikację ewentualnych nadużyć.
-
-#### **2. Monitorowanie Dostępu**
-- **Opis:** Regularne sprawdzanie logów i aktywności w bazie danych w celu wykrywania potencjalnych zagrożeń.
-- **Przykład:** Administrator techniczny może monitorować, które konta użytkowników najczęściej wykonują operacje `DELETE`, co może wskazywać na próby usunięcia danych.
-
-### **f. Ograniczenia Fizyczne i Sieciowe**
+### **d. Ograniczenia Fizyczne i Sieciowe**
 
 #### **1. Dostęp do Serwera**
 - **Opis:** Ograniczenie fizycznego dostępu do serwera bazy danych tylko dla uprawnionych osób.
@@ -438,7 +348,7 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
 - **Opis:** Konfiguracja zapór sieciowych w celu ograniczenia dostępu do bazy danych tylko dla zaufanych adresów IP.
 - **Przykład:** Zapora sieciowa blokuje wszystkie połączenia z zewnątrz, pozwalając tylko na połączenia z wewnętrznej sieci szkolnej.
 
-### **g. Backup i Odzyskiwanie Danych**
+### **e. Backup i Odzyskiwanie Danych**
 
 #### **1. Regularne Kopie Zapasowe**
 - **Opis:** Tworzenie regularnych kopii zapasowych bazy danych w celu ochrony przed utratą danych.
@@ -447,119 +357,3 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
 #### **2. Plany Odzyskiwania**
 - **Opis:** Opracowanie procedur odzyskiwania danych w przypadku awarii systemu lub ataku.
 - **Przykład:** W przypadku awarii serwera, zespół IT ma przygotowany plan, który obejmuje przywrócenie bazy danych z ostatniej kopii zapasowej i minimalizację przestojów.
-
-## 4. **Przykłady Form Normalnych w Bazie `school_normalized`**
-
-### **Pierwsza Postać Normalna (1NF)**
-- **Definicja:** Wszystkie tabele mają klucz główny, a wszystkie atrybuty zawierają tylko jedną wartość (wartości atomowe).
-- **Przykład:**
-  - **Tabela `Users`:**
-    - Każdy rekord ma unikalny `IdUser`.
-    - Atrybuty takie jak `FirstName` czy `Surname` zawierają tylko jedną wartość dla każdego rekordu, np. `FirstName = "Jan"`, `Surname = "Kowalski"`.
-
-### **Druga Postać Normalna (2NF)**
-- **Definicja:** Baza jest w 2NF, jeśli jest w 1NF i wszystkie atrybuty niekluczowe są w pełni zależne od klucza głównego.
-- **Przykład:**
-  - **Tabela `Grades`:**
-    - Klucz główny to `IdGrade`.
-    - Atrybuty takie jak `NumberGrade`, `Description`, `Date` są w pełni zależne od `IdGrade`.
-    - Nie ma częściowych zależności, ponieważ `IdGrade` jest pojedynczym atrybutem.
-
-### **Trzecia Postać Normalna (3NF)**
-- **Definicja:** Baza jest w 3NF, jeśli jest w 2NF i nie ma zależności przechodnich między atrybutami.
-- **Przykład:**
-  - **Tabela `Users`:**
-    - `Role` zależy bezpośrednio od `IdUser`, a nie przez inny atrybut.
-    - Nie ma zależności, w których jeden atrybut niekluczowy zależy od innego atrybutu niekluczowego.
-
-### **Relacja Presences do Lekcji i Uczniów (0:N)**
-- **Opis:** Tabela `Presences` ma relację wiele do jednego (N:1) z tabelami `Lessons` i `Students`.
-- **Przykład:**
-  - **Lekcja bez obecności:** Na początku roku szkolnego nie ma żadnych wpisów w tabeli `Presences` dla danej lekcji.
-  - **Lekcja z obecnościami:** Lekcja `IdLesson = 1` może mieć wiele wpisów w tabeli `Presences`, np. `IdPresence = 1, 2, 3` dla różnych uczniów.
-
-### **Pola Opcjonalne w Tabelach**
-- **Users:**
-  - `SecondName`: Nie każdy użytkownik ma drugie imię, więc pole to jest opcjonalne.
-  - `Email`: Niektórzy użytkownicy mogą nie podawać adresu e-mail, więc pole to jest opcjonalne.
-  
-- **Adresses:**
-  - `Street` (opcjonalne): Może być puste w przypadku adresów bez nazwy ulicy.
-  - `AdditionalBuildingIdentifier` (opcjonalny): Opcjonalne pole umożliwiające dodanie dodatkowego identyfikatora budynku.
-  - `AppartmentNumber` (opcjonalny): Nie każdy adres ma numer mieszkania, więc pole to jest opcjonalne.
-
-- **Students:**
-  - `Age`: Jest przechowywane jako pole wymagane, ale może być obliczane na podstawie `DateOfBirth` dla szybszego dostępu.
-
-- **PhoneNumbersParentsMatch:**
-  - `Description`: Opcjonalne pole umożliwiające dodanie dodatkowych informacji do powiązań numerów telefonów z rodzicami.
-
-## 5. **Use Cases i Role Użytkowników**
-
-### **a. Uczeń (Students)**
-- **Funkcje:**
-  - Przeglądanie swoich ocen.
-  - Przeglądanie swoich średnich.
-  - Przeglądanie swoich obecności.
-  - Przeglądanie swojego planu lekcji.
-- **Uprawnienia:**
-  - **SELECT:** Dostęp do tabel `Grades`, `Presences`, `Lessons` w zakresie tylko swoich danych.
-  - **SELECT:** Dostęp do swoich rekordów w tabeli `Users`.
-
-### **b. Rodzic**
-- **Funkcje:**
-  - Wszystko, co uczeń.
-  - Usprawiedliwianie nieobecności swojego dziecka.
-- **Uprawnienia:**
-  - **SELECT:** Dostęp do danych dziecka w tabelach `Grades`, `Presences`, `Lessons`.
-  - **UPDATE:** Możliwość aktualizacji wpisów obecności swojego dziecka w tabeli `Presences`.
-
-### **c. Nauczyciel**
-- **Funkcje:**
-  - Zarządzanie obecnościami.
-  - Zarządzanie ocenami.
-- **Uprawnienia:**
-  - **SELECT, INSERT, UPDATE:** Dostęp do tabel `Grades` i `Presences` w zakresie przypisanych im przedmiotów i klas.
-  - **SELECT:** Dostęp do tabel `Students` i `Lessons` dla swoich klas.
-
-### **d. Dyrektor**
-- **Funkcje:**
-  - Wszystko, co nauczyciel.
-  - Wszystko, co administrator danych.
-  - Zarządzanie przedmiotami.
-  - Zarządzanie lekcjami.
-- **Uprawnienia:**
-  - **SELECT, INSERT, UPDATE, DELETE:** Dostęp do wszystkich tabel związanych z ocenami, obecnościami, przedmiotami i lekcjami.
-  - **SELECT, INSERT, UPDATE, DELETE:** Dostęp do tabel `Users`, `Classes`, `SchoolSubjects`, `Lessons`.
-
-### **e. Administrator Danych**
-- **Funkcje:**
-  - Zarządzanie użytkownikami.
-- **Uprawnienia:**
-  - **SELECT, INSERT, UPDATE, DELETE:** Dostęp do tabel `Users`, `Students`, `Parents`, `Teachers`, oraz powiązanych tabel.
-
-### **f. Administrator Techniczny**
-- **Funkcje:**
-  - Wszystko, co administrator danych.
-  - Zarządzanie kopiami zapasowymi.
-- **Uprawnienia:**
-  - **SELECT, INSERT, UPDATE, DELETE:** Dostęp do wszystkich tabel, które może mieć administrator danych.
-  - **Operacje na bazie danych:** Uprawnienia do tworzenia kopii zapasowych, przywracania danych, zarządzania użytkownikami bazy danych.
-
-### **g. Użytkownik (Ogólne Uprawnienia)**
-- **Funkcje:**
-  - Odczytywanie wiadomości.
-  - Wysyłanie wiadomości.
-- **Uprawnienia:**
-  - **SELECT:** Dostęp do tabeli `Messages` oraz `MessageUserReceiverPairs` w zakresie odczytu wiadomości.
-  - **INSERT:** Dodawanie nowych wiadomości do tabeli `Messages` oraz tworzenie powiązań w `MessageUserReceiverPairs`.
-
-## 6. **Podsumowanie**
-
-Projektowanie bazy danych `school_normalized` z zachowaniem trzeciej postaci normalnej (3NF) zapewnia strukturę, która minimalizuje redundancję i utrzymuje integralność danych. Klucze główne i obce odgrywają kluczową rolę w utrzymaniu spójności danych, zapewniając, że relacje między tabelami są zawsze poprawne. Indeksy poprawiają wydajność zapytań, a ograniczenia takie jak `NOT NULL` i typy danych zapewniają, że dane są przechowywane w odpowiednim formacie.
-
-Kontrola dostępu do danych jest realizowana poprzez przypisanie użytkownikom odpowiednich ról, które definiują ich uprawnienia w systemie. Dzięki temu każdy użytkownik ma dostęp tylko do tych danych i funkcji, które są dla niego istotne zgodnie z jego rolą, co zwiększa bezpieczeństwo i efektywność systemu.
-
-Denormalizacja, choć może poprawić wydajność, powinna być stosowana z rozwagą, aby nie wprowadzać nadmiarowości, która mogłaby komplikować zarządzanie danymi. W przypadku Twojej bazy danych, denormalizacja może być zastosowana w miejscach, gdzie często wykonywane są operacje odczytu danych z kilku tabel jednocześnie, co może poprawić wydajność aplikacji.
-
-Jeśli będziesz potrzebować dalszej pomocy lub masz dodatkowe pytania, jestem do dyspozycji!
