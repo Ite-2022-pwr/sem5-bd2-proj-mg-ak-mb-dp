@@ -237,7 +237,6 @@ Normalizacja to proces organizowania danych w bazie danych, aby zmniejszyć redu
 - **Przykład:**
   - `Login_UNIQUE` w tabeli `Users` gwarantuje, że każdy login jest unikalny, zapobiegając duplikatom.
   - `Email_UNIQUE` w tabeli `Users` gwarantuje, że każdy adres e-mail jest unikalny.
-  - `PostCode_UNIQUE` w tabeli `PostCodes` zapewnia unikalność każdego kodu pocztowego.
 
 ### **c. Klucze Obce i Integralność Referencyjna**
 
