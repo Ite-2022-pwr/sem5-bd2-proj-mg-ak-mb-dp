@@ -19,14 +19,15 @@
 #### **2. PostCodes (Kody Pocztowe)**
 - **Przeznaczenie:** Zawiera kody pocztowe wraz z nazwami regionów, takich jak miasta, przedmieścia czy wsie.
 - **Kluczowe Atrybuty:**
-  - `PostCode` (PK): Unikalny kod pocztowy.
+  - `IdPostCode` (PK): Unikalny identyfikator kodu pocztowego.
+  - `PostCode` : Kod pocztowy.
   - `RegionName`: Nazwa regionu związana z kodem pocztowym.
 
 #### **3. Adresses (Adresy)**
 - **Przeznaczenie:** Przechowuje szczegółowe informacje adresowe użytkowników.
 - **Kluczowe Atrybuty:**
   - `IdAddress` (PK): Unikalny identyfikator adresu.
-  - `PostCode` (FK): Odniesienie do kodu pocztowego w tabeli `PostCodes`.
+  - `IdPostCode` (FK): Odniesienie do kodu pocztowego w tabeli `PostCodes`.
   - `Street` (opcjonalne): Ulica.
   - `BuildingNumber`: Numer budynku.
   - `AdditionalBuildingIdentifier` (opcjonalny): Dodatkowy identyfikator budynku (np. litera w numerze budynku).
