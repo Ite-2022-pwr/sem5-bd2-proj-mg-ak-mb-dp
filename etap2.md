@@ -93,6 +93,7 @@
   - `NumberGrade`: Numer oceny (domyślnie 1).
   - `Description`: Opis oceny.
   - `Date`: Data wystawienia oceny.
+  - `Weight`: Waga oceny (np. 2 dla oceny z testu, 1 dla oceny z pracy klasowej).
 
 #### **11. Parents (Rodzice)**
 - **Przeznaczenie:** Specjalizacja tabeli `Users` dla rodziców.
@@ -197,6 +198,113 @@
   - `IdTeacher` jest kluczem obcym odnoszącym się do `Teachers(IdTeacher)`.
   - **Jak to działa:** Każda ocena musi być przypisana do istniejącego przedmiotu, ucznia i nauczyciela. Nie można wprowadzić oceny dla przedmiotu, ucznia lub nauczyciela, który nie istnieje w odpowiednich tabelach.
 
+### Widoki w Bazie Danych `school_normalized`
+
+#### `StudentGradesView` – Widok Ocen Ucznia
+
+Pozwala uczniowi zobaczyć swoje oceny z informacjami o przedmiocie, nauczycielu i wadze.
+
+**Definicja widoku:**
+
+```sql
+CREATE VIEW StudentGradesView AS
+SELECT
+    g.IdGrade,
+    g.IdStudent,
+    ss.Name AS SubjectName,
+    g.NumberGrade,
+    g.Weight,
+    g.Description,
+    g.Date,
+    CONCAT(tu.FirstName, ' ', tu.Surname) AS TeacherName
+FROM
+    Grades g
+    INNER JOIN Students s ON g.IdStudent = s.IdStudent
+    INNER JOIN Teachers t ON g.IdTeacher = t.IdTeacher
+    INNER JOIN Users tu ON t.IdUser = tu.IdUser
+    INNER JOIN SchoolSubjects ss ON g.IdSubject = ss.IdSchoolSubject;
+```
+
+**Użycie:**
+
+Uczeń wyświetla swoje oceny:
+
+```sql
+SELECT *
+FROM StudentGradesView
+WHERE IdStudent = [TwojeIdStudenta];
+```
+
+---
+
+#### `UserMessagesView` – Widok Wiadomości Użytkownika
+
+Pozwala użytkownikowi odczytać swoje wiadomości wraz z informacjami o nadawcy.
+
+**Definicja widoku:**
+
+```sql
+CREATE VIEW UserMessagesView AS
+SELECT
+    m.IdMessage,
+    murp.IdUserReceiver,
+    m.Content,
+    m.DateSent,
+    CONCAT(su.FirstName, ' ', su.Surname) AS SenderName
+FROM
+    Messages m
+    INNER JOIN MessageUserReceiverPairs murp ON m.IdMessage = murp.IdMessage
+    INNER JOIN Users su ON m.IdUserSender = su.IdUser;
+```
+
+**Użycie:**
+
+Użytkownik wyświetla swoje wiadomości:
+
+```sql
+SELECT *
+FROM UserMessagesView
+WHERE IdUserReceiver = [TwojeIdUser];
+```
+
+---
+
+#### `ChildPresencesView` – Widok Obecności Dziecka
+
+Pozwala rodzicowi zobaczyć obecności swojego dziecka na lekcjach.
+
+**Definicja widoku:**
+
+```sql
+CREATE VIEW ChildPresencesView AS
+SELECT
+    p.IdPresence,
+    p.IdStudent,
+    p.Type,
+    l.DateTimeStart,
+    l.Topic,
+    ss.Name AS SubjectName,
+    CONCAT(su.FirstName, ' ', su.Surname) AS StudentName
+FROM
+    Presences p
+    INNER JOIN Lessons l ON p.IdLesson = l.IdLesson
+    INNER JOIN SchoolSubjects ss ON l.IdSchoolSubject = ss.IdSchoolSubject
+    INNER JOIN Students s ON p.IdStudent = s.IdStudent
+    INNER JOIN Users su ON s.IdUser = su.IdUser
+    INNER JOIN ParentsStudentPairs psp ON s.IdStudent = psp.IdStudent
+WHERE
+    psp.IdParent = [TwojeIdParent];
+```
+
+**Użycie:**
+
+Rodzic wyświetla obecności dziecka:
+
+```sql
+SELECT *
+FROM ChildPresencesView;
+```
+
 ## 2. **Mechanizmy Zapewniające Poprawność Przechowywanych Informacji**
 
 ### **a. Normalizacja Bazy Danych**
@@ -227,29 +335,113 @@ Normalizacja to proces organizowania danych w bazie danych, aby zmniejszyć redu
 ### **b. Klucze Główne i Unikalne Ograniczenia**
 
 #### **Klucze Główne (`PRIMARY KEY`)**
+
 - **Definicja:** Unikalny identyfikator każdego rekordu w tabeli.
+
 - **Przykład:**
+  - Tabela `Classes` ma klucz główny `IdClass`, który jednoznacznie identyfikuje każdą klasę.
+  - Tabela `PostCodes` ma klucz główny `IdPostCode`, który jednoznacznie identyfikuje każdy kod pocztowy.
+  - Tabela `Adresses` ma klucz główny `IdAddress`, który jednoznacznie identyfikuje każdy adres.
   - Tabela `Users` ma klucz główny `IdUser`, który jednoznacznie identyfikuje każdego użytkownika.
-  - Tabela `Presences` ma klucz główny `IdPresence`, który jednoznacznie identyfikuje każdy wpis frekwencji.
+  - Tabela `Students` ma klucz główny `IdStudent`, który jednoznacznie identyfikuje każdego ucznia.
+  - Tabela `SchoolSubjects` ma klucz główny `IdSchoolSubject`, który jednoznacznie identyfikuje każdy przedmiot szkolny.
+  - Tabela `Teachers` ma klucz główny `IdTeacher`, który jednoznacznie identyfikuje każdego nauczyciela.
+  - Tabela `Lessons` ma klucz główny `IdLesson`, który jednoznacznie identyfikuje każdą lekcję.
+  - Tabela `Grades` ma klucz główny `IdGrade`, który jednoznacznie identyfikuje każdą ocenę.
+  - Tabela `Parents` ma klucz główny `IdParent`, który jednoznacznie identyfikuje każdego rodzica.
+  - Tabela `Messages` ma klucz główny `IdMessage`, który jednoznacznie identyfikuje każdą wiadomość.
+  - Tabela `Presences` ma klucz główny `IdPresence`, który jednoznacznie identyfikuje każdą obecność.
+  - Tabela `PhoneNumbers` ma klucz główny `IdPhoneNumber`, który jednoznacznie identyfikuje każdy numer telefonu.
+
+- **Klucze główne złożone:**
+  - Tabela `TeachersTeachingSubjects` ma klucz główny złożony z `IdTeacher` i `IdSchoolSubject`, co jednoznacznie identyfikuje powiązanie nauczyciela z przedmiotem.
+  - Tabela `ParentsStudentPairs` ma klucz główny złożony z `IdStudent` i `IdParent`, co jednoznacznie identyfikuje relację między uczniem a rodzicem.
+  - Tabela `MessageUserReceiverPairs` ma klucz główny złożony z `IdMessage` i `IdUserReceiver`, co jednoznacznie identyfikuje odbiorcę wiadomości.
+  - Tabela `PhoneNumbersParentsMatch` ma klucz główny złożony z `IdPhoneNumber` i `IdParent`, co jednoznacznie identyfikuje powiązanie numeru telefonu z rodzicem.
 
 #### **Indeksy Unikalne (`UNIQUE INDEX`)**
-- **Definicja:** Zapewniają, że wartości w określonych kolumnach są unikalne.
+
+- **Definicja:** Zapewniają, że wartości w określonych kolumnach są unikalne, zapobiegając duplikatom.
+
 - **Przykład:**
-  - `Login_UNIQUE` w tabeli `Users` gwarantuje, że każdy login jest unikalny, zapobiegając duplikatom.
+  - `Login_UNIQUE` w tabeli `Users` gwarantuje, że każdy login jest unikalny.
   - `Email_UNIQUE` w tabeli `Users` gwarantuje, że każdy adres e-mail jest unikalny.
+  - `IdUser_UNIQUE` w tabeli `Students` zapewnia, że dany użytkownik może być przypisany tylko do jednego ucznia.
+  - `IdUser_UNIQUE` w tabeli `Teachers` zapewnia, że dany użytkownik może być przypisany tylko do jednego nauczyciela.
+  - `IdUser_UNIQUE` w tabeli `Parents` zapewnia, że dany użytkownik może być przypisany tylko do jednego rodzica.
+  - `PhoneNumber_UNIQUE` w tabeli `PhoneNumbers` gwarantuje, że każdy numer telefonu jest unikalny.
 
 ### **c. Klucze Obce i Integralność Referencyjna**
 
 #### **Klucze Obce (`FOREIGN KEY`)**
-- **Definicja:** Odniesienie do klucza głównego w innej tabeli, zapewniające, że relacje między tabelami są spójne.
+
+- **Definicja:** Odniesienie do klucza głównego w innej tabeli, zapewniające spójność i integralność danych poprzez wymuszenie istnienia powiązanych rekordów.
+
 - **Przykład:**
-  - `IdUser` w tabeli `Students` jest kluczem obcym odnoszącym się do `Users(IdUser)`.
-  - `IdAddress` w tabeli `Users` jest kluczem obcym odnoszącym się do `Adresses(IdAddress)`.
-  - `IdClass` w tabeli `Students` jest kluczem obcym odnoszącym się do `Classes(IdClass)`.
-  - `IdSchoolSubject` w tabeli `Lessons` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
-  - `IdTeacher` w tabeli `Lessons` jest kluczem obcym odnoszącym się do `Teachers(IdTeacher)`.
-  - `IdSubject` w tabeli `Grades` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
-  - **Jak to działa:** Zapewnia, że każdy rekord w tabeli zależnej (np. `Students`, `Grades`, `Lessons`) jest powiązany z istniejącym rekordem w tabeli głównej (np. `Users`, `Classes`, `SchoolSubjects`, `Teachers`). Nie można dodać rekordu do tabeli zależnej bez istniejącego odpowiednika w tabeli głównej, co zapobiega niespójnym danym.
+
+  - W tabeli `Adresses`:
+    - `IdPostCode` jest kluczem obcym odnoszącym się do `PostCodes(IdPostCode)`.
+    - **Jak to działa:** Zapewnia, że każdy adres jest powiązany z istniejącym kodem pocztowym.
+
+  - W tabeli `Users`:
+    - `IdAddress` jest kluczem obcym odnoszącym się do `Adresses(IdAddress)`.
+    - **Jak to działa:** Gwarantuje, że każdy użytkownik ma przypisany istniejący adres.
+
+  - W tabeli `Students`:
+    - `IdUser` jest kluczem obcym odnoszącym się do `Users(IdUser)`.
+    - `IdClass` jest kluczem obcym odnoszącym się do `Classes(IdClass)`.
+    - **Jak to działa:** Upewnia się, że każdy uczeń jest powiązany z istniejącym użytkownikiem i klasą.
+
+  - W tabeli `Teachers`:
+    - `IdUser` jest kluczem obcym odnoszącym się do `Users(IdUser)`.
+    - **Jak to działa:** Zapewnia, że każdy nauczyciel jest powiązany z istniejącym użytkownikiem.
+
+  - W tabeli `Lessons`:
+    - `IdSchoolSubject` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
+    - `IdTeacher` jest kluczem obcym odnoszącym się do `Teachers(IdTeacher)`.
+    - `IdClass` jest kluczem obcym odnoszącym się do `Classes(IdClass)`.
+    - **Jak to działa:** Gwarantuje, że każda lekcja jest powiązana z istniejącym przedmiotem, nauczycielem i klasą.
+
+  - W tabeli `Grades`:
+    - `IdStudent` jest kluczem obcym odnoszącym się do `Students(IdStudent)`.
+    - `IdTeacher` jest kluczem obcym odnoszącym się do `Teachers(IdTeacher)`.
+    - `IdSubject` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
+    - **Jak to działa:** Upewnia się, że każda ocena jest przypisana do istniejącego ucznia, nauczyciela i przedmiotu.
+
+  - W tabeli `TeachersTeachingSubjects`:
+    - `IdTeacher` jest kluczem obcym odnoszącym się do `Teachers(IdTeacher)`.
+    - `IdSchoolSubject` jest kluczem obcym odnoszącym się do `SchoolSubjects(IdSchoolSubject)`.
+    - **Jak to działa:** Zapewnia poprawne powiązanie nauczycieli z przedmiotami, które nauczają.
+
+  - W tabeli `Parents`:
+    - `IdUser` jest kluczem obcym odnoszącym się do `Users(IdUser)`.
+    - **Jak to działa:** Gwarantuje, że każdy rodzic jest powiązany z istniejącym użytkownikiem.
+
+  - W tabeli `ParentsStudentPairs`:
+    - `IdStudent` jest kluczem obcym odnoszącym się do `Students(IdStudent)`.
+    - `IdParent` jest kluczem obcym odnoszącym się do `Parents(IdParent)`.
+    - **Jak to działa:** Umożliwia tworzenie relacji wielu do wielu między uczniami a rodzicami.
+
+  - W tabeli `Messages`:
+    - `IdUserSender` jest kluczem obcym odnoszącym się do `Users(IdUser)`.
+    - **Jak to działa:** Każda wiadomość jest powiązana z istniejącym użytkownikiem jako nadawcą.
+
+  - W tabeli `MessageUserReceiverPairs`:
+    - `IdMessage` jest kluczem obcym odnoszącym się do `Messages(IdMessage)`.
+    - `IdUserReceiver` jest kluczem obcym odnoszącym się do `Users(IdUser)`.
+    - **Jak to działa:** Umożliwia powiązanie wiadomości z wieloma odbiorcami.
+
+  - W tabeli `Presences`:
+    - `IdLesson` jest kluczem obcym odnoszącym się do `Lessons(IdLesson)`.
+    - `IdStudent` jest kluczem obcym odnoszącym się do `Students(IdStudent)`.
+    - **Jak to działa:** Rejestruje obecność uczniów na konkretnych lekcjach, zapewniając spójność danych.
+
+  - W tabeli `PhoneNumbersParentsMatch`:
+    - `IdPhoneNumber` jest kluczem obcym odnoszącym się do `PhoneNumbers(IdPhoneNumber)`.
+    - `IdParent` jest kluczem obcym odnoszącym się do `Parents(IdParent)`.
+    - **Jak to działa:** Łączy numery telefonów z rodzicami, zapewniając, że numery są przypisane do istniejących rodziców.
+
+- **Jak to działa ogólnie:** Klucze obce wymuszają integralność referencyjną, co oznacza, że nie można dodać rekordu do tabeli zależnej bez istnienia odpowiadającego rekordu w tabeli głównej. Zapobiega to niespójnym danym i utrzymuje integralność bazy danych.
 
 ## 3. **Kontrola Dostępu do Danych**
 
