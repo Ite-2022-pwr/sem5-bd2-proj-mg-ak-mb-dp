@@ -305,6 +305,35 @@ SELECT *
 FROM ChildPresencesView;
 ```
 
+### d. Procedury Składowane w Bazie Danych `school_normalized`
+
+Jako grupa zdecydowaliśmy się na nie używanie procedur składowanych w bazie danych `school_normalized`.
+
+Głównymi powodami są:
+- różnice w obsłudze procedur składowanych w różnych systemach bazodanowych, co może powodować problemy z przenoszeniem bazy danych w przypadku potencjalnej zmiany systemu bazodanowego,
+- słaby ekosystem oprogramowania wokół procedur składowanych, co może utrudnić rozwijanie i utrzymywanie aplikacji korzystającej z bazy danych,
+- trudności w debugowaniu i testowaniu procedur składowanych w porównaniu do zapytań SQL.
+
+### e. triggery w Bazie Danych `school_normalized`
+
+Jako grupa zdecydowaliśmy się na nie używanie triggerów w bazie danych `school_normalized`.
+
+Głównymi powodami są:
+- przy usuwaniu rekordów z bazy danych używamy domyślnych ograniczeń klucza obcego takich jak cascade, co zapewnia spójność danych,
+- większość logiki, która byłaby obsługiwana przez triggery, może być przeniesiona do warstwy aplikacji, co ułatwia zarządzanie i utrzymanie kodu,
+- w realizacji projektu planowane jest użycie ORM  Hibernate, który obsługuje większość operacji na bazie danych, co eliminuje potrzebę użycia triggerów.
+
+### f. uprawnienia w Bazie Danych `school_normalized`
+
+W realizacji bazy danych planowane są dwa rodzaje uprawnień:
+- dla administratora technicznego (administratora bazy danych) - pełne uprawnienia do zarządzania bazą danych,
+- dla serwera aplikacji - typowe uprawnienia CRUD dla bazy, z wyłączeniem edycji struktury tabel.
+
+Powyższe uprawnienia będą nadawane na poziomie użytkownika bazy danych, a nie na poziomie tabeli.
+
+Uważamy że powyższe uprawnienia będą wystarczające dla zapewnienia bezpieczeństwa bazy, ponieważ:
+- dostęp do bazy będzie ograniczony tylko do podanych adresów IP, administratora i serwera aplikacji, oraz serwer dbms będzie zabezpieczony odpowienimi zasadami firewalla który będzie blokował cały ruch z poza dwóch podanych adresów IP do bazy.
+
 ## 2. **Mechanizmy Zapewniające Poprawność Przechowywanych Informacji**
 
 ### **a. Normalizacja Bazy Danych**
@@ -549,3 +578,13 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
 #### **2. Plany Odzyskiwania**
 - **Opis:** Opracowanie procedur odzyskiwania danych w przypadku awarii systemu lub ataku.
 - **Przykład:** W przypadku awarii serwera, zespół IT ma przygotowany plan, który obejmuje przywrócenie bazy danych z ostatniej kopii zapasowej i minimalizację przestojów.
+
+
+# notes
+uprawnienia
+
+triggery
+
+procedury składowane
+
+logika vs sql
