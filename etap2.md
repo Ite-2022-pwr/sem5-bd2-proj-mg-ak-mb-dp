@@ -334,6 +334,13 @@ Powyższe uprawnienia będą nadawane na poziomie użytkownika bazy danych, a ni
 Uważamy że powyższe uprawnienia będą wystarczające dla zapewnienia bezpieczeństwa bazy, ponieważ:
 - dostęp do bazy będzie ograniczony tylko do podanych adresów IP, administratora i serwera aplikacji, oraz serwer dbms będzie zabezpieczony odpowienimi zasadami firewalla który będzie blokował cały ruch z poza dwóch podanych adresów IP do bazy.
 
+### g. bezpieczeństwo
+Bezpieczeństwo:
+- aplikacja będzie wykorzystywać użytkownika bazy danych z odpowiednimi uprawnieniami: SELECT, INSERT, UPDATE, DELETE (https://www.postgresql.org/docs/current/ddl-priv.html)
+- bezpieczeństwo przed SQL Injection zapewnia ORM (Hibernate)
+- dostęp do bazy ma jedynie aplikacja i administrator techniczny łącząc się z konkretnych adresów IP
+- hasła użytkowników w bazie danych są haszowane
+
 ## 2. **Mechanizmy Zapewniające Poprawność Przechowywanych Informacji**
 
 ### **a. Normalizacja Bazy Danych**
