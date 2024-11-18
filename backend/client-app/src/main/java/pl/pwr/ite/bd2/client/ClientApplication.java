@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import pl.wrss.wita.common.model.querydsl.CustomJpaRepositoryFactoryBean;
+import pl.pwr.ite.bd2.model.querydsl.CustomJpaRepositoryFactoryBean;
 
 @SpringBootApplication(scanBasePackages = "pl.pwr.ite.bd2")
 @EntityScan(basePackages = "pl.pwr.ite.bd2")
