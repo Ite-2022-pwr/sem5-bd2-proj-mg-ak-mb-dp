@@ -1,0 +1,24 @@
+logging:
+  level:
+    root: info
+
+server:
+  ssl:
+    enabled: false
+  port: 1144
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:postgresql://localhost:54321/db2_dev
+    username: db2
+    password: db2
+  jpa:
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: true
+        default_schema: public
+    hibernate:
+      ddl-auto: update
