@@ -20,47 +20,8 @@ public class User extends EntityBase {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
-    @Column(/*nullable = false, */length = 100, unique = true)
+    @Column(nullable = false, length = 100, unique = true)
     private String email;
-
-    @Column
-    private String profileUrl;
-
-    @Column(/*nullable = false, */length = 15)
-    private String phoneNumber;
-
-    @Column(/*nullable = false, */length = 15)
-    private String indexNumber;
-
-    @Column(length = 50)
-    private String firstName;
-
-    @Column(length = 100)
-    private String lastName;
-
-    @Column(length = 5)
-    private String code;
-
-    @Column(length = 64)
-    private String passwordHash;
-
-    @Column(length = 30)
-    private String roomNumber;
-
-    @Column(length = 50)
-    private String iceNumber;
-
-    @Column(length = 15)
-    private String dietType;
-
-    @Column
-    private Integer busNumber;
-
-    @Column(length = 50)
-    private String shirtSize;
-
-    @Column(length = 50)
-    private String faculty;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserRole> roles = new HashSet<>();
