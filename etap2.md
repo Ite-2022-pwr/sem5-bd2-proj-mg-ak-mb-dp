@@ -586,12 +586,5 @@ Każdy użytkownik systemu ma przypisaną rolę, która definiuje, do jakich fun
 - **Opis:** Opracowanie procedur odzyskiwania danych w przypadku awarii systemu lub ataku.
 - **Przykład:** W przypadku awarii serwera, zespół IT ma przygotowany plan, który obejmuje przywrócenie bazy danych z ostatniej kopii zapasowej i minimalizację przestojów.
 
-
-# notes
-uprawnienia
-
-triggery
-
-procedury składowane
-
-logika vs sql
+## Alternatywne podejście do zabezpieczeń
+W ramach innego podejścia do zabezpieczeń możliwa byłaby konstrukcja aplikacji jako wiele modułów/mikroserwisów, działających na różnych endpointach REST API pod tym samym adresem, gdzie każdy moduł odpowiada za inną rolę oraz ma dedykowane konto w bazie danych z adekwatnymi uprawnieniami, jednak rozwiązanie to znacznie zwiększa skomlikowanie architektury aplikacji która de facto staje sie kilkoma, oraz zwiększa zapotrzebowanie na zasoby, przez co uznaliśmy, że ewentualne zalety tego podejścia nie są warte stosowania.
