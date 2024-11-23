@@ -58,8 +58,8 @@ public class UserServiceImpl extends FilterableEntityServiceBase<User, UserFilte
         var path = QUser.user;
         return createQuery().select(path).from(path)
                 .where(Expressions.allOf(
-                        path.firstName.eq(firstName),
-                        path.lastName.eq(lastName)
+//                        path.firstName.eq(firstName),
+//                        path.lastName.eq(lastName)
                 )).fetchOne();
     }
 
@@ -68,7 +68,7 @@ public class UserServiceImpl extends FilterableEntityServiceBase<User, UserFilte
         var path = QUser.user;
         return createQuery().select(path)
                 .from(path)
-                .where(path.code.eq(userCode))
+//                .where(path.code.eq(userCode))
                 .fetchOne();
     }
 
@@ -102,8 +102,8 @@ public class UserServiceImpl extends FilterableEntityServiceBase<User, UserFilte
         int i = 1;
         do {
             var sb = new StringBuilder();
-            sb.append(user.getFirstName().charAt(0));
-            sb.append(user.getLastName().charAt(0));
+//            sb.append(user.getFirstName().charAt(0));
+//            sb.append(user.getLastName().charAt(0));
             sb.append(String.format("%02d", i++));
             code = sb.toString();
         } while (findByCode(code) != null);

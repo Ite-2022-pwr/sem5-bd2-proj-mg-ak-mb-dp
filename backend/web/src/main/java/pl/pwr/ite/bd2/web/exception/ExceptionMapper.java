@@ -50,7 +50,7 @@ public class ExceptionMapper extends ResponseEntityExceptionHandler implements I
             message = errorDescriptor.getDefaultMessage();
         }
         if (code == null && errorDescriptor != null) {
-            code = errorDescriptor.getCode();
+            code = errorDescriptor.getCode().toUpperCase();
         }
         if (status == null && errorDescriptor != null) {
             status = errorDescriptor.getDefaultStatus();
