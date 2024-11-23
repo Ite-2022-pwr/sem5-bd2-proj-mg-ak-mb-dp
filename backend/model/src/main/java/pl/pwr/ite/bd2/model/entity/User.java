@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "`user`")
+@Table(name = "`users`")
 @Getter
 @Setter
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
@@ -26,6 +26,13 @@ public class User extends EntityBase {
     @Column(length = 64)
     private String passwordHash;
 
+    @Column(name = "Login", length = 45)
+    private String login;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserRole> roles = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "IdAddress")
+    private Address address;
 }

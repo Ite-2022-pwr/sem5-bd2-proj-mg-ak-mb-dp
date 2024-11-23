@@ -5,7 +5,6 @@ import {CredentialsDto} from "@/model/CredentialsDto";
 import {Flex, Input} from "@chakra-ui/react";
 import {AuthService} from "@/service/AuthService";
 import {isErrorDto} from "@/service/utils";
-import system from "@/theme";
 
 export const LoginPage = () => {
     const router = useRouter();
