@@ -54,7 +54,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <skip>false</skip>
-                    <mainClass>pl.pwr.ite.server.client.ClientApplication</mainClass>
+                    <mainClass>pl.pwr.ite.bd2.client.ClientApplication</mainClass>
                     <!--                    <executable>true</executable>-->
                 </configuration>
             </plugin>
