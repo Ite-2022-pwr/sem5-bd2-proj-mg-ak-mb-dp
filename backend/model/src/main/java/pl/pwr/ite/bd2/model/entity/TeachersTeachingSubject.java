@@ -16,7 +16,7 @@ import lombok.ToString;
 public class TeachersTeachingSubject extends EntityBase {
 
     @ManyToOne
-    @JoinColumn(nullable = false, name = "IdTacher")
+    @JoinColumn(nullable = false, name = "IdTeacher")
     private Teacher teacher;
 
     @ManyToOne

@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Addresses")
+@Table(name = "PostCodes")
 @Getter
 @Setter
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
