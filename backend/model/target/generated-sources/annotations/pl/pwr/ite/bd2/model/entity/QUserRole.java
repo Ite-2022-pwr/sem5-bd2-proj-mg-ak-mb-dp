@@ -57,7 +57,7 @@ public class QUserRole extends EntityPathBase<UserRole> {
         this(UserRole.class, metadata, inits);
     }
 
-    public QUserRole(Class<? extends UserRole> type, PathMetadata metadata, PathInits inits) {
+    public QUserRole(SchoolClass<? extends UserRole> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.role = inits.isInitialized("role") ? new QRole(forProperty("role")) : null;
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;

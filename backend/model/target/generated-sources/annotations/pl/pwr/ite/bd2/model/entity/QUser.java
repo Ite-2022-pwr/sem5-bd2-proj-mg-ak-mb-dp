@@ -38,8 +38,14 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath login = createString("login");
 
+    public final SetPath<Message, QMessage> messages = this.<Message, QMessage>createSet("messages", Message.class, QMessage.class, PathInits.DIRECT2);
+
+    public final SetPath<MessageUserReceiverPair, QMessageUserReceiverPair> messageUserReceiverPairs = this.<MessageUserReceiverPair, QMessageUserReceiverPair>createSet("messageUserReceiverPairs", MessageUserReceiverPair.class, QMessageUserReceiverPair.class, PathInits.DIRECT2);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modified = _super.modified;
+
+    public final QParent parent;
 
     public final StringPath passwordHash = createString("passwordHash");
 
@@ -47,7 +53,11 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath secondName = createString("secondName");
 
+    public final QStudent student;
+
     public final StringPath surname = createString("surname");
+
+    public final QTeacher teacher;
 
     public final EnumPath<pl.pwr.ite.bd2.model.enums.UserType> type = createEnum("type", pl.pwr.ite.bd2.model.enums.UserType.class);
 
@@ -70,6 +80,9 @@ public class QUser extends EntityPathBase<User> {
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.address = inits.isInitialized("address") ? new QAddress(forProperty("address"), inits.get("address")) : null;
+        this.parent = inits.isInitialized("parent") ? new QParent(forProperty("parent"), inits.get("parent")) : null;
+        this.student = inits.isInitialized("student") ? new QStudent(forProperty("student"), inits.get("student")) : null;
+        this.teacher = inits.isInitialized("teacher") ? new QTeacher(forProperty("teacher"), inits.get("teacher")) : null;
     }
 
 }

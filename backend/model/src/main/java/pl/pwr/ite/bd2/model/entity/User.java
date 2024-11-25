@@ -50,4 +50,13 @@ public class User extends EntityBase {
 
     @OneToMany(mappedBy = "receiver")
     private Set<MessageUserReceiverPair> messageUserReceiverPairs = new HashSet<>();
+
+    @OneToOne(mappedBy = "user")
+    private Parent parent;
+
+    @OneToOne(mappedBy = "user")
+    private Student student;
+
+    @OneToOne(mappedBy = "user")
+    private Teacher teacher;
 }
