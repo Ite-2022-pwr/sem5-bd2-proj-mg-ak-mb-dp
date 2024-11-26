@@ -1,14 +1,10 @@
 package pl.pwr.ite.bd2.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,10 +15,12 @@ import java.util.Set;
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
 public class Address extends EntityBase {
 
-    @Column(length = 45, name = "street")
+    @Column(length = 45, name = "Street")
     private String street;
 
-    //TODO: add post code
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "IdPostCode")
+    private PostCode postCode;
 
     @Column(length = 6, name = "BuildingNumber")
     private String buildingNumber;

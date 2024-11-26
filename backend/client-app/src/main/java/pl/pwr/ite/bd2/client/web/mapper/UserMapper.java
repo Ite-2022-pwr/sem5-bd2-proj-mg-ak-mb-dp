@@ -15,5 +15,7 @@ public class UserMapper extends MapperBase<User, UserDto, UserDto.Properties> {
         destination.setId(source.getId());
         destination.setUserType(source.getType());
         destination.setEmail(source.getEmail());
+        destination.setFirstName(source.getFirstName());
+        destination.setSecondName(source.getSecondName());
     }
 }
