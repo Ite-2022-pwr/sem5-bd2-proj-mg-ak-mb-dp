@@ -14,7 +14,7 @@ interface NavbarItem {
 export const AdminLayout:React.FC<AdminLayoutProps> = ({ children }) => {
     const router = useRouter();
     return (
-        <HStack height="100%" width="100%" spacing={0} align="stretch" gap={50}>
+        <HStack height="100%" width="100%" align="stretch" gap={50}>
             <VStack width={"25%"}>
                 <Text textAlign={"center"} fontSize={30}>
                     Dziennik elektroniczny &#34;GEJzer&#34;

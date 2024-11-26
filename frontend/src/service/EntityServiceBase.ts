@@ -54,7 +54,7 @@ export abstract class EntityServiceBase {
                 code = 'REQUEST_SETUP_ERROR';
                 message = error.message;
             }
-        } else {
+        } else if (error instanceof Error) {
             code = "REQUEST_SETUP_ERROR";
             message = error.message;
         }
