@@ -55,7 +55,7 @@ public class QPhoneNumbersParentsMatch extends EntityPathBase<PhoneNumbersParent
         this(PhoneNumbersParentsMatch.class, metadata, inits);
     }
 
-    public QPhoneNumbersParentsMatch(SchoolClass<? extends PhoneNumbersParentsMatch> type, PathMetadata metadata, PathInits inits) {
+    public QPhoneNumbersParentsMatch(Class<? extends PhoneNumbersParentsMatch> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.parent = inits.isInitialized("parent") ? new QParent(forProperty("parent"), inits.get("parent")) : null;
         this.phoneNumber = inits.isInitialized("phoneNumber") ? new QPhoneNumber(forProperty("phoneNumber")) : null;

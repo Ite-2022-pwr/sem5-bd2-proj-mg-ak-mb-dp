@@ -9,4 +9,12 @@ export class UserService extends EntityServiceBase {
     public async getUsers() {
         return this.get<UserDto[]>('');
     }
+
+    public async editUser(dto: UserDto, id: string) {
+        return this.put<UserDto, UserDto>(`/${id}`, dto);
+    }
+
+    public async getUserById(id: string) {
+        return this.get<UserDto>(`/${id}`);
+    }
 }

@@ -1,0 +1,82 @@
+import {Flex, Input} from "@chakra-ui/react"
+import {useRouter} from "next/router";
+import {UserDto} from "@/model/UserDto";
+import React, {useEffect, useState} from "react";
+import {Field} from "@/components/ui/field";
+import {UserService} from "@/service/UserService";
+import {isErrorDto} from "@/service/utils";
+
+export const UserPage = () => {
+    const router = useRouter();
+    const { id } = router.query;
+
+    const [userData, setUserData] = useState<UserDto>(emptyUser);
+    const userService = new UserService();
+
+    const userId = typeof id === "string" ? id : "";
+
+    useEffect(() => {
+        if(userId) {
+            const userService = new UserService();
+            const fetchUserData = async () => {
+                const fetchedUser = await userService.getUserById(userId);
+                if(!isErrorDto(fetchedUser)) {
+                    setUserData({
+                        id: fetchedUser.id || '',
+                        userType: fetchedUser.userType || '',
+                        email: fetchedUser.email || '',
+                        firstName: fetchedUser.firstName || '',
+                        secondName: fetchedUser.secondName || '',
+                        phoneNumber: fetchedUser.phoneNumber || '',
+                    });
+                }
+            };
+
+            fetchUserData();
+        }
+    }, [router, userId]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setUserData(prevData => ({...prevData, [name]: value}));
+    }
+
+    const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const uData = await userService.editUser(userData, userId);
+        if(!isErrorDto(uData)) {
+            setUserData(uData);
+        }
+    }
+
+    return (
+        <Flex direction={"column"}>
+            <form onSubmit={handleSubmit}>
+                <Field label={"First name"} required>
+                    <Input value={userData.firstName} name="firstName" onChange={handleChange} placeholder={"First Name"} variant={"outline"}/>
+                </Field>
+                <Field label={"Second name"} required>
+                    <Input value={userData.secondName} name="secondName" onChange={handleChange} placeholder={"Last Name"} variant={"outline"}/>
+                </Field>
+                <Field label={"Email"} required>
+                    <Input value={userData.email} name="email" onChange={handleChange} placeholder={"test@example.com"} variant={"outline"}/>
+                </Field>
+                <Field label={"Phone number"} required>
+                    <Input value={userData.phoneNumber} name="phoneNumber" onChange={handleChange} placeholder={"123456789"} variant={"outline"}/>
+                </Field>
+                <button type={"submit"}>
+                    Zapisz
+                </button>
+            </form>
+        </Flex>
+    );
+}
+
+const emptyUser: UserDto = {
+    id: '',
+    userType: '',
+    email: '',
+    firstName: '',
+    secondName: '',
+    phoneNumber: ''
+}

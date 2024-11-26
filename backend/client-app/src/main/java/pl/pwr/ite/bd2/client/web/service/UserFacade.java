@@ -17,6 +17,10 @@ import pl.pwr.ite.bd2.service.JwtService;
 import pl.pwr.ite.bd2.service.UserService;
 import pl.pwr.ite.bd2.web.EntityServiceFacade;
 import pl.pwr.ite.bd2.web.SecurityFacade;
+import pl.pwr.ite.bd2.web.exception.ApplicationError;
+import pl.pwr.ite.bd2.web.exception.ApplicationException;
+
+import java.util.UUID;
 
 @Component
 public class UserFacade extends EntityServiceFacade<User, UserFilter, UserService, UserDto, UserDto.Properties, UserMapper> {
@@ -28,6 +32,19 @@ public class UserFacade extends EntityServiceFacade<User, UserFilter, UserServic
         super(service, mapper, securityFacade);
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+    }
+
+    @Transactional
+    public User update(UUID id, UserDto dto) {
+        var user = getById(id);
+        if(user == null) {
+            throw new ApplicationException(ApplicationError.UserNotFound);
+        }
+        user.setFirstName(dto.getFirstName());
+        user.setSecondName(dto.getSecondName());
+        user.setEmail(dto.getEmail());
+
+        return saveAndFlush(user);
     }
 
     @Transactional

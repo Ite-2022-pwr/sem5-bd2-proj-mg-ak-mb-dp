@@ -3,9 +3,7 @@ package pl.pwr.ite.bd2.client.web.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.pwr.ite.bd2.client.web.dto.UserDto;
 import pl.pwr.ite.bd2.client.web.service.UserFacade;
 import pl.pwr.ite.bd2.mapping.MappingProperties;
@@ -13,6 +11,7 @@ import pl.pwr.ite.bd2.model.filter.UserFilter;
 import pl.pwr.ite.bd2.service.MappingService;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -34,5 +33,15 @@ public class UserController implements InitializingBean {
     @GetMapping
     public ResponseEntity<Collection<UserDto>> getAll(UserFilter filter) {
         return ResponseEntity.ok(userFacade.getList(filter, defaultListProperties));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getById(@PathVariable UUID id) {
+        return ResponseEntity.ok(userFacade.getById(id, defaultSingleProperties));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> update(@PathVariable UUID id, @RequestBody UserDto dto) {
+        return ResponseEntity.ok(userFacade.map(userFacade.update(id, dto), defaultSingleProperties));
     }
 }

@@ -57,7 +57,7 @@ public class QMessage extends EntityPathBase<Message> {
         this(Message.class, metadata, inits);
     }
 
-    public QMessage(SchoolClass<? extends Message> type, PathMetadata metadata, PathInits inits) {
+    public QMessage(Class<? extends Message> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.sender = inits.isInitialized("sender") ? new QUser(forProperty("sender"), inits.get("sender")) : null;
     }

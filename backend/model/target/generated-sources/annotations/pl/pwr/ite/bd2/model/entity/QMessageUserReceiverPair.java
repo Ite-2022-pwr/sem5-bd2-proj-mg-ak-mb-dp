@@ -53,7 +53,7 @@ public class QMessageUserReceiverPair extends EntityPathBase<MessageUserReceiver
         this(MessageUserReceiverPair.class, metadata, inits);
     }
 
-    public QMessageUserReceiverPair(SchoolClass<? extends MessageUserReceiverPair> type, PathMetadata metadata, PathInits inits) {
+    public QMessageUserReceiverPair(Class<? extends MessageUserReceiverPair> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.message = inits.isInitialized("message") ? new QMessage(forProperty("message"), inits.get("message")) : null;
         this.receiver = inits.isInitialized("receiver") ? new QUser(forProperty("receiver"), inits.get("receiver")) : null;

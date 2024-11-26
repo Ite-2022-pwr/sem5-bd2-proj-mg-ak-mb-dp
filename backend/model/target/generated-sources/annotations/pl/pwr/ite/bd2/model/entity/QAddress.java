@@ -59,7 +59,7 @@ public class QAddress extends EntityPathBase<Address> {
         this(Address.class, metadata, inits);
     }
 
-    public QAddress(SchoolClass<? extends Address> type, PathMetadata metadata, PathInits inits) {
+    public QAddress(Class<? extends Address> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.postCode = inits.isInitialized("postCode") ? new QPostCode(forProperty("postCode")) : null;
     }

@@ -57,7 +57,7 @@ public class QParent extends EntityPathBase<Parent> {
         this(Parent.class, metadata, inits);
     }
 
-    public QParent(SchoolClass<? extends Parent> type, PathMetadata metadata, PathInits inits) {
+    public QParent(Class<? extends Parent> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }

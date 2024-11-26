@@ -20,7 +20,7 @@ public class User extends EntityBase {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
-    @Column(nullable = false, length = 60, unique = true, name = "Email")
+    @Column(nullable = false, length = 60, unique = true)
     private String email;
 
     @Column(length = 64, name = "PasswordHash")
