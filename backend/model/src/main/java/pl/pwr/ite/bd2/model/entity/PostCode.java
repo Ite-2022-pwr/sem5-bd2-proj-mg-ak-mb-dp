@@ -21,6 +21,9 @@ public class PostCode extends EntityBase {
     @Column(length = 8, name = "PostCode")
     private String postCode;
 
+    @Column(length = 58, name = "RegionName")
+    private String regionName;
+
     @OneToMany(mappedBy = "postCode")
     private Set<Address> addresses = new HashSet<>();
 }
