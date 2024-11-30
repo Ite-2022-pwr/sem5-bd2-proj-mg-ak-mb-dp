@@ -87,12 +87,12 @@ public class UserServiceImpl extends FilterableEntityServiceBase<User, UserFilte
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var path = QUser.user;
-        var tuple = new JPAQuery<>(entityManager).select(path.id, path.email, path.type).from(path).where(path.email.equalsIgnoreCase(username)).fetchOne();
+        var tuple = new JPAQuery<>(entityManager).select(path.id, path.email/*, path.type*/).from(path).where(path.email.equalsIgnoreCase(username)).fetchOne();
         if(tuple == null) {
             throw new UsernameNotFoundException(String.format("User with email '%s' not found", username));
         }
         var userId = tuple.get(path.id);
-        var type = tuple.get(path.type);
+//        var type = tuple.get(path.type);
         return AuthenticatedUser.builder().userId(userId).email(username)/*.userType(type)*/.build();
     }
 
