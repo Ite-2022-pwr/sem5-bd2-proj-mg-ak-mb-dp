@@ -28,7 +28,7 @@ public class ClaimsAuthenticatedUserTokenConverter implements Converter<Claims, 
         var authenticatedUser = AuthenticatedUser.builder()
                 .userId(userId)
                 .email(email)
-                .userType(userType)
+//                .userType(userType)
                 .build();
         return new UsernamePasswordAuthenticationToken(authenticatedUser, authorities);
     }

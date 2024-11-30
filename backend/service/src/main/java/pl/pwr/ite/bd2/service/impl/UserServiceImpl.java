@@ -93,7 +93,7 @@ public class UserServiceImpl extends FilterableEntityServiceBase<User, UserFilte
         }
         var userId = tuple.get(path.id);
         var type = tuple.get(path.type);
-        return AuthenticatedUser.builder().userId(userId).email(username).userType(type).build();
+        return AuthenticatedUser.builder().userId(userId).email(username)/*.userType(type)*/.build();
     }
 
     @Override

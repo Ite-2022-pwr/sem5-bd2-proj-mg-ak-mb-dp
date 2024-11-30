@@ -13,7 +13,7 @@ public class UserMapper extends MapperBase<User, UserDto, UserDto.Properties> {
     @Override
     public void transform(User source, UserDto destination, UserDto.Properties properties) {
         destination.setId(source.getId());
-        destination.setUserType(source.getType());
+//        destination.setUserType(source.getType());
         destination.setEmail(source.getEmail());
         destination.setFirstName(source.getFirstName());
         destination.setSecondName(source.getSecondName());

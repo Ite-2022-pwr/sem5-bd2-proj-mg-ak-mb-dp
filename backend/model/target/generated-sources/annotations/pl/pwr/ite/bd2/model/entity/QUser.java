@@ -59,8 +59,6 @@ public class QUser extends EntityPathBase<User> {
 
     public final QTeacher teacher;
 
-    public final EnumPath<pl.pwr.ite.bd2.model.enums.UserType> type = createEnum("type", pl.pwr.ite.bd2.model.enums.UserType.class);
-
     public QUser(String variable) {
         this(User.class, forVariable(variable), INITS);
     }

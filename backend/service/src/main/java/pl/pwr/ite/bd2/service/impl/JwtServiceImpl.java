@@ -38,7 +38,7 @@ public class JwtServiceImpl implements JwtService, InitializingBean {
         var claims = Jwts.claims().setSubject(authenticatedUser.getUsername());
         claims.put("email", authenticatedUser.getEmail());
         claims.put("uid", authenticatedUser.getUserId());
-        claims.put("userType", authenticatedUser.getUserType());
+//        claims.put("userType", authenticatedUser.getUserType());
 
 //        Collection<String> authorities = authenticatedUser.getAuthorities()
 //                        .stream().map(authorityConverter::toClaim).toList();

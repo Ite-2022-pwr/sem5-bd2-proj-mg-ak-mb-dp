@@ -16,9 +16,9 @@ import java.util.Set;
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
 public class User extends EntityBase {
 
-    @Column(nullable = false, length = 50)
-    @Enumerated(EnumType.STRING)
-    private UserType type;
+//    @Column(nullable = false, length = 50)
+//    @Enumerated(EnumType.STRING)
+//    private UserType type;
 
     @Column(nullable = false, length = 60, unique = true)
     private String email;

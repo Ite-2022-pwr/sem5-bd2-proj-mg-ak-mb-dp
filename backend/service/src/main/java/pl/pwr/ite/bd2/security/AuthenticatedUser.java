@@ -22,7 +22,7 @@ import java.util.UUID;
 public class AuthenticatedUser implements UserDetails {
 
     private final UUID userId;
-    private final UserType userType;
+//    private final UserType userType;
     private final String email;
 
     @Override

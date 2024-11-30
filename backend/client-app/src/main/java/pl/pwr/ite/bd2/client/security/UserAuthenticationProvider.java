@@ -47,7 +47,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
             throw new ApplicationException(ApplicationError.WrongPassword);
         }
 
-        var principal = AuthenticatedUser.builder().userId(user.getId()).email(email).userType(user.getType()).build();
+        var principal = AuthenticatedUser.builder().userId(user.getId()).email(email)./*userType(user.getType()).*/build();
         var authorities = new HashSet<GrantedAuthority>();
         userService.collectAuthorities(user, authorities);
         return new UsernamePasswordAuthenticationToken(principal, null, authorities);
