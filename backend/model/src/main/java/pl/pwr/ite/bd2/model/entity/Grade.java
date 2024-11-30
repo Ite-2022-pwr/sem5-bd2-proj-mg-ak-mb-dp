@@ -18,7 +18,7 @@ public class Grade extends EntityBase {
     @Column(nullable = false, name = "NumberGrade")
     private Integer numberGrade;
 
-    @Column(nullable = false, length = 45, name = "Description")
+    @Column(nullable = false, length = 45, name = "GradeDescription")
     private String description;
 
     @Column(nullable = false, name = "DateCreated")

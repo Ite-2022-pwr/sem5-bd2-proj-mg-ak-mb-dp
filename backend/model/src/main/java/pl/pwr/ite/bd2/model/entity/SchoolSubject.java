@@ -19,7 +19,7 @@ import java.util.Set;
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
 public class SchoolSubject extends EntityBase {
 
-    @Column(nullable = false, length = 45, name = "Name")
+    @Column(nullable = false, length = 45, name = "SubjectName")
     private String name;
 
     @Column(nullable = false, name = "SchoolYear")

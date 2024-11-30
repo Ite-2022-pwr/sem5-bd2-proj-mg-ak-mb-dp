@@ -13,7 +13,7 @@ import pl.pwr.ite.bd2.model.enums.PresenceType;
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
 public class Presence extends EntityBase {
 
-    @Column(nullable = false, length = 50, name = "Type")
+    @Column(nullable = false, length = 50, name = "PresenceType")
     @Enumerated(EnumType.STRING)
     private PresenceType type;
 

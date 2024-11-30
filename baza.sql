@@ -1,3 +1,18 @@
+-- Database: school_db
+
+-- DROP DATABASE IF EXISTS school_db;
+
+-- CREATE DATABASE school_db
+--     WITH
+--     OWNER = db2
+--     ENCODING = 'UTF8'
+--     LC_COLLATE = 'Polish_Poland.1250'
+--     LC_CTYPE = 'Polish_Poland.1250'
+--     LOCALE_PROVIDER = 'libc'
+--     TABLESPACE = pg_default
+--     CONNECTION LIMIT = -1
+--     IS_TEMPLATE = False;
+
 -- adressses
 
 CREATE TABLE public.addresses (
@@ -28,7 +43,7 @@ ALTER TABLE public.classes OWNER TO db2;
 CREATE TABLE public.grades (
     id uuid NOT NULL PRIMARY KEY,
     date_created timestamp(6) without time zone NOT NULL,
-    description character varying(45) NOT NULL,
+    grade_description character varying(45) NOT NULL,
     number_grade integer NOT NULL,
     weight integer NOT NULL,
     id_subject uuid NOT NULL,
@@ -150,11 +165,11 @@ CREATE TABLE public.presences (
     id uuid NOT NULL PRIMARY KEY,
     created timestamp(6) without time zone NOT NULL,
     modified timestamp(6) without time zone NOT NULL,
-    type character varying(50) NOT NULL,
+    presence_type character varying(50) NOT NULL,
     id_student uuid NOT NULL,
     id_lesson uuid NOT NULL,
     CONSTRAINT presences_type_check CHECK (
-        ((type)::text = ANY ((ARRAY[
+        ((presence_type)::text = ANY ((ARRAY[
             'Present'::character varying,
             'UnexcusedAbsent'::character varying,
             'ExcusedAbsent'::character varying
@@ -170,7 +185,7 @@ ALTER TABLE public.presences OWNER TO db2;
 CREATE TABLE public.school_subjects (
     id uuid NOT NULL PRIMARY KEY,
     link_to_subject_program character varying(100) NOT NULL,
-    name character varying(45) NOT NULL,
+    subject_name character varying(45) NOT NULL,
     school_year timestamp(6) without time zone NOT NULL
 );
 
@@ -247,7 +262,7 @@ CREATE TABLE public.users (
     second_name character varying(45) NOT NULL,
     surname character varying(45) NOT NULL,
     id_address uuid NOT NULL,
-    phone_number character varying(20) NOT NULL,
+    phone_number character varying(20) NOT NULL
 );
 
 ALTER TABLE ONLY public.users
@@ -274,9 +289,6 @@ ALTER TABLE ONLY public.students
     ADD CONSTRAINT fk_students_id_class FOREIGN KEY (id_class) REFERENCES public.classes(id);
 
 -- parents
-
-ALTER TABLE ONLY public.parents
-    ADD CONSTRAINT fk_parents_id_parent FOREIGN KEY (id_parent) REFERENCES public.parents(id);
 
 ALTER TABLE ONLY public.parents
     ADD CONSTRAINT fk_parents_id_user FOREIGN KEY (id_user) REFERENCES public.users(id);
@@ -331,8 +343,6 @@ ALTER TABLE ONLY public.user_role
 ALTER TABLE ONLY public.teachers_teaching_subjects
     ADD CONSTRAINT fk_teachers_teaching_subjects_id_school_subject FOREIGN KEY (id_school_subject) REFERENCES public.school_subjects(id);
 
-ALTER TABLE ONLY public.teachers_teaching_subjects
-    ADD CONSTRAINT fk_teachers_teaching_subjects_id_teacher FOREIGN KEY (id_tacher) REFERENCES public.teachers(id);
 
 -- message_user_receiver_pairs
 
@@ -366,3 +376,52 @@ ALTER TABLE ONLY public.presences
 
 ALTER TABLE ONLY public.presences
     ADD CONSTRAINT fk_presences_id_lesson FOREIGN KEY (id_lesson) REFERENCES public.lessons(id);
+
+-- VIEWS
+
+CREATE VIEW student_grades_view AS
+SELECT
+    g.id as grade_id,
+    g.id_student,
+    ss.subject_name AS subject_name,
+    g.number_grade,
+    g.weight,
+    g.grade_description,
+    g.date_created,
+    CONCAT(tu.first_name, ' ', tu.surname) AS teacher_name
+FROM
+    grades AS g
+    INNER JOIN students AS s ON g.id_student = s.id
+    INNER JOIN teachers AS t ON g.id_teacher = t.id
+    INNER JOIN Users AS tu ON t.id_user = tu.id
+    INNER JOIN school_subjects AS ss ON g.id_subject = ss.id;
+
+
+CREATE VIEW user_message_view AS
+SELECT
+    m.id as message_id,
+    murp.id_user_receiver,
+    m.content,
+    m.date_sent,
+    CONCAT(su.first_name, ' ', su.surname) AS sender_name
+FROM
+    Messages m
+    INNER JOIN message_user_receiver_pairs murp ON m.id = murp.id_message
+    INNER JOIN users su ON m.id_user_sender = su.id;
+
+CREATE VIEW children_presences_view AS
+SELECT
+    p.id as presence_id,
+    p.id_student,
+    p.presence_type,
+    l.date_time_start,
+    l.topic,
+    ss.subject_name AS SubjectName,
+    CONCAT(su.first_name, ' ', su.surname) AS student_name
+FROM
+    presences AS p
+    INNER JOIN lessons AS l ON p.id_lesson = l.id
+    INNER JOIN school_subjects AS ss ON l.id_school_subject = ss.id
+    INNER JOIN students AS s ON p.id_student = s.id
+    INNER JOIN users AS su ON s.id_user = su.id
+    INNER JOIN parent_student_pairs AS psp ON s.id = psp.id_student
