@@ -21,7 +21,7 @@ public class Grade extends EntityBase {
     @Column(nullable = false, length = 45, name = "Description")
     private String description;
 
-    @Column(nullable = false, name = "Date")
+    @Column(nullable = false, name = "DateCreated")
     private LocalDateTime date;
 
     @Column(nullable = false, name = "Weight")

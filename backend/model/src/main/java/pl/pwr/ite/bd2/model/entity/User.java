@@ -23,10 +23,10 @@ public class User extends EntityBase {
     @Column(nullable = false, length = 60, unique = true)
     private String email;
 
-    @Column(length = 64, name = "PasswordHash")
+    @Column(nullable = false, length = 64, name = "PasswordHash")
     private String passwordHash;
 
-    @Column(name = "Login", length = 45)
+    @Column(nullable = false, name = "UserLogin", length = 45)
     private String login;
 
     @Column(nullable = false, length = 45, name = "FirstName")

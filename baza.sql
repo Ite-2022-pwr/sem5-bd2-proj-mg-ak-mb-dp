@@ -5,7 +5,6 @@ CREATE TABLE public.addresses (
     apartment_number character varying(6),
     building_number character varying(6),
     street character varying(45),
-    post_code character varying(8),
     id_post_code uuid NOT NULL
 );
 
@@ -16,7 +15,7 @@ ALTER TABLE public.addresses OWNER TO db2;
 
 CREATE TABLE public.classes (
     id uuid NOT NULL PRIMARY KEY,
-    name character varying(3) NOT NULL,
+    class_name character varying(3) NOT NULL,
     year_of_study integer NOT NULL,
     year_started timestamp(6) without time zone NOT NULL
 );
@@ -28,7 +27,7 @@ ALTER TABLE public.classes OWNER TO db2;
 
 CREATE TABLE public.grades (
     id uuid NOT NULL PRIMARY KEY,
-    date timestamp(6) without time zone NOT NULL,
+    date_created timestamp(6) without time zone NOT NULL,
     description character varying(45) NOT NULL,
     number_grade integer NOT NULL,
     weight integer NOT NULL,
@@ -96,7 +95,6 @@ CREATE TABLE public.parents (
     parent_role character varying(20) NOT NULL,
     description character varying(200) NOT NULL,
     id_user uuid NOT NULL,
-    id_parent uuid NOT NULL,
     id_phone_number uuid NOT NULL,
     CONSTRAINT parents_parent_role_check CHECK (
         ((parent_role)::text = ANY ((ARRAY[
@@ -109,7 +107,7 @@ CREATE TABLE public.parents (
 );
 
 ALTER TABLE ONLY public.parents
-    ADD CONSTRAINT uk_jmywsj9g7hvifq4uailh9x5s6 UNIQUE (id_user);
+    ADD CONSTRAINT uk_parents_id_user UNIQUE (id_user);
 
 ALTER TABLE public.parents OWNER TO db2;
 
@@ -221,7 +219,6 @@ ALTER TABLE public.teachers OWNER TO db2;
 CREATE TABLE public.teachers_teaching_subjects (
     id uuid NOT NULL PRIMARY KEY,
     id_school_subject uuid NOT NULL,
-    id_tacher uuid NOT NULL,
     id_teacher uuid NOT NULL
 );
 
@@ -245,23 +242,19 @@ CREATE TABLE public.users (
     id uuid NOT NULL PRIMARY KEY,
     email character varying(60) NOT NULL,
     first_name character varying(45) NOT NULL,
-    login character varying(45),
-    password_hash character varying(64),
+    user_login character varying(45) NOT NULL,
+    password_hash character varying(64) NOT NULL,
     second_name character varying(45) NOT NULL,
     surname character varying(45) NOT NULL,
-    type character varying(50) NOT NULL,
     id_address uuid NOT NULL,
     phone_number character varying(20) NOT NULL,
-    CONSTRAINT users_type_check CHECK (
-        ((type)::text = ANY ((ARRAY[
-            'Participant'::character varying,
-            'Crew'::character varying,
-            'Organizer'::character varying
-        ])::text[])))
 );
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT uk_users_email UNIQUE (email);
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT uk_users_login UNIQUE (user_login);
 
 ALTER TABLE public.users OWNER TO db2;
 
