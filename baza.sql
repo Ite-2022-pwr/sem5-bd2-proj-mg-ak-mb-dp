@@ -445,3 +445,13 @@ FROM
 WHERE
     p.presence_type = 'UnexcusedAbsent'
 ORDER BY l.date_time_start DESC;
+
+CREATE INDEX presences_idx
+ON presences (id, id_student, id_lesson, presence_type);
+
+CREATE INDEX lessons_idx
+ON lessons (id, id_school_subject, id_class, id_teacher, date_time_start DESC);
+
+CREATE INDEX grades_idx
+ON grades (id, id_student, id_teacher, id_subject, number_grade, date_created DESC, weight);
+
