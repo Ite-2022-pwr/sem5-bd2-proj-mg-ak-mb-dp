@@ -424,4 +424,24 @@ FROM
     INNER JOIN school_subjects AS ss ON l.id_school_subject = ss.id
     INNER JOIN students AS s ON p.id_student = s.id
     INNER JOIN users AS su ON s.id_user = su.id
+    INNER JOIN parent_student_pairs AS psp ON s.id = psp.id_student;
+
+CREATE VIEW children_absentees_view AS
+SELECT
+    p.id as presence_id,
+    p.id_student,
+    p.presence_type,
+    l.date_time_start,
+    l.topic,
+    ss.subject_name AS SubjectName,
+    CONCAT(su.first_name, ' ', su.surname) AS student_name
+FROM
+    presences AS p
+    INNER JOIN lessons AS l ON p.id_lesson = l.id
+    INNER JOIN school_subjects AS ss ON l.id_school_subject = ss.id
+    INNER JOIN students AS s ON p.id_student = s.id
+    INNER JOIN users AS su ON s.id_user = su.id
     INNER JOIN parent_student_pairs AS psp ON s.id = psp.id_student
+WHERE
+    p.presence_type = 'UnexcusedAbsent'
+ORDER BY l.date_time_start DESC;
