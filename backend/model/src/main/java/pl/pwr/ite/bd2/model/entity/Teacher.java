@@ -19,8 +19,8 @@ public class Teacher extends EntityBase {
     @Column(nullable = false, name = "LastCOCRDate")
     private LocalDate lastCOCRDate;
 
-    @Column(nullable = false, name = "OneLeave")
-    private Boolean oneLeave;
+    @Column(nullable = false, name = "OnLeave")
+    private Boolean onLeave;
 
     @OneToOne
     @JoinColumn(nullable = false, name = "IdUser")
