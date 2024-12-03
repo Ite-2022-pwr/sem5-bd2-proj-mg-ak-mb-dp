@@ -14,6 +14,17 @@ public class UserDto {
     @Accessors(chain = true)
     public static abstract class Properties implements MappingProperties {
 
+        public MappingProperties setIncludeNestedAddress(boolean b) {
+            return null;
+        }
+
+        public MappingProperties setIncludeNestedGrade(boolean b) {
+            return null;
+        }
+
+        public MappingProperties setIncludeNestedLesson(boolean b) {
+            return null;
+        }
     }
 
     private UUID id;
