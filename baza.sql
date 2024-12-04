@@ -455,3 +455,30 @@ ON lessons (id, id_school_subject, id_class, id_teacher, date_time_start DESC);
 CREATE INDEX grades_idx
 ON grades (id, id_student, id_teacher, id_subject, number_grade, date_created DESC, weight);
 
+
+-- TESTS
+
+SELECT
+	*
+FROM
+	presences as pr
+	INNER JOIN students as st ON st.id = pr.id_student
+	INNER JOIN lessons as ls ON ls.id = pr.id_lesson
+	INNER JOIN school_subjects as ss ON ss.id = ls.id_school_subject
+	INNER JOIN classes as cl ON cl.id = ls.id_class
+	INNER JOIN teachers as tc ON tc.id = ls.id_teacher
+WHERE
+	pr.presence_type = 'ExcusedAbsent'
+ORDER BY
+	pr.modified DESC;
+
+
+SELECT
+	*
+FROM
+	presences as pr
+	INNER JOIN students as st ON st.id = pr.id_student
+	INNER JOIN lessons as ls ON ls.id = pr.id_lesson
+	INNER JOIN school_subjects as ss ON ss.id = ls.id_school_subject
+	INNER JOIN classes as cl ON cl.id = ls.id_class
+	INNER JOIN teachers as tc ON tc.id = ls.id_teacher;
