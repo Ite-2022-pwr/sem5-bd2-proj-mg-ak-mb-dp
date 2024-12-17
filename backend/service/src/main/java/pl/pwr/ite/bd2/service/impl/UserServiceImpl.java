@@ -34,6 +34,12 @@ public class UserServiceImpl extends FilterableEntityServiceBase<User, UserFilte
     }
 
     @Override
+    public User findById(UUID id) {
+        var path = QUser.user;
+        return createQuery().select(path).from(path).where(path.id.eq(id)).fetchOne();
+    }
+
+    @Override
     public User findByEmail(String email) {
         var path = QUser.user;
         return new JPAQuery<>(entityManager).select(path).from(path).where(path.email.equalsIgnoreCase(email)).fetchOne();

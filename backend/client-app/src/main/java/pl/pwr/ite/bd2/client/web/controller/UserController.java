@@ -23,11 +23,13 @@ public class UserController implements InitializingBean {
 
     private MappingProperties defaultSingleProperties;
     private MappingProperties defaultListProperties;
+    private MappingProperties authenticatedProperties;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         defaultSingleProperties = mappingService.createProperties(UserDto.Properties.class);
         defaultListProperties = mappingService.createProperties(UserDto.Properties.class);
+        authenticatedProperties = mappingService.createProperties(UserDto.Properties.class);
     }
 
     @GetMapping
@@ -43,5 +45,10 @@ public class UserController implements InitializingBean {
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> update(@PathVariable UUID id, @RequestBody UserDto dto) {
         return ResponseEntity.ok(userFacade.map(userFacade.update(id, dto), defaultSingleProperties));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getAuthenticated() {
+        return ResponseEntity.ok(userFacade.map(userFacade.getAuthenticatedUser(), authenticatedProperties));
     }
 }

@@ -7,18 +7,19 @@ import {AuthProvider} from "@/provider/AuthProvider";
 import {useRouter} from "next/router";
 import {Header} from "@/components/Header";
 import {AdminLayout} from "@/components/AdminLayout";
+import {Provider} from "@/components/ui/provider";
 
 export default function App(appProps: AppProps) {
     const [queryClient] = useState(() => new QueryClient())
     return (
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
-                <ChakraProvider value={system}>
+                <Provider>
                     <Flex direction={"column"}>
                         <Header />
                         <ContentWrapper {...appProps} />
                     </Flex>
-                </ChakraProvider>
+                </Provider>
             </AuthProvider>
         </QueryClientProvider>
     );

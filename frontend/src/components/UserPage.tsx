@@ -23,11 +23,9 @@ export const UserPage = () => {
                 if(!isErrorDto(fetchedUser)) {
                     setUserData({
                         id: fetchedUser.id || '',
-                        userType: fetchedUser.userType || '',
                         email: fetchedUser.email || '',
                         firstName: fetchedUser.firstName || '',
                         secondName: fetchedUser.secondName || '',
-                        phoneNumber: fetchedUser.phoneNumber || '',
                     });
                 }
             };
@@ -61,9 +59,6 @@ export const UserPage = () => {
                 <Field label={"Email"} required>
                     <Input value={userData.email} name="email" onChange={handleChange} placeholder={"test@example.com"} variant={"outline"}/>
                 </Field>
-                <Field label={"Phone number"} required>
-                    <Input value={userData.phoneNumber} name="phoneNumber" onChange={handleChange} placeholder={"123456789"} variant={"outline"}/>
-                </Field>
                 <button type={"submit"}>
                     Zapisz
                 </button>
@@ -74,9 +69,7 @@ export const UserPage = () => {
 
 const emptyUser: UserDto = {
     id: '',
-    userType: '',
     email: '',
     firstName: '',
     secondName: '',
-    phoneNumber: ''
 }

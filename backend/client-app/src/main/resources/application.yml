@@ -11,9 +11,9 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-    url: jdbc:postgresql://${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://localhost:54321/db2_dev
+    username: db2
+    password: db2
   jpa:
     properties:
       hibernate:
@@ -25,5 +25,5 @@ spring:
 
 rajdownik:
   auth:
-    jwtSecret: ${JWT_SECRET}
+    jwtSecret: 688dc1754ba81961938cee3adb5b1b68167c1cf5531f6da17490b550b6465fb8
   frontend-url: ${FRONTEND_URL}

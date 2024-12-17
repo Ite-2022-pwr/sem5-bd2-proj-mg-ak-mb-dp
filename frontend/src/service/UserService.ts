@@ -1,5 +1,7 @@
 import {EntityServiceBase} from "@/service/EntityServiceBase";
 import {UserDto} from "@/model/UserDto";
+import {JwtDto} from "@/model/JwtDto";
+import {ErrorDto} from "@/model/ErrorDto";
 
 export class UserService extends EntityServiceBase {
     constructor() {
@@ -16,5 +18,10 @@ export class UserService extends EntityServiceBase {
 
     public async getUserById(id: string) {
         return this.get<UserDto>(`/${id}`);
+    }
+
+    public async authenticated(): Promise<UserDto | ErrorDto> {
+        const response = await this.get<UserDto | ErrorDto>('/me');
+        return response;
     }
 }

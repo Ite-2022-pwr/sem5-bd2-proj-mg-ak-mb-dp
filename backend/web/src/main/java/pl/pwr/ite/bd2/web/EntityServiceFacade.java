@@ -61,7 +61,7 @@ public abstract class EntityServiceFacade<E extends EntityBase, F extends Filter
     }
 
     public D getById(UUID id, MappingProperties properties) {
-        return (D) mapper.map(service.findById(id), properties);
+        return (D) mapper.map(getById(id), properties);
     }
 
     public D map(E entity) {

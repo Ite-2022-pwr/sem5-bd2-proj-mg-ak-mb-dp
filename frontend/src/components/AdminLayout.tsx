@@ -15,11 +15,11 @@ export const AdminLayout:React.FC<AdminLayoutProps> = ({ children }) => {
     const router = useRouter();
     return (
         <HStack height="100%" width="100%" align="stretch" gap={50}>
-            <VStack width={"25%"}>
+            <VStack width={"25%"} paddingTop={15}>
                 <Text textAlign={"center"} fontSize={30}>
                     Dziennik elektroniczny &#34;GEJzer&#34;
                 </Text>
-                <Flex width="100%" direction={"column"} padding={20} gap={20} >
+                <Flex width="100%" direction={"column"} padding={5} gap={10} >
                     {navbarItems.map((item) => (
                         <Button fontSize={20} key={item.label} onClick={() => router.push(item.url)}>
                             {item.label}
@@ -38,19 +38,11 @@ export const AdminLayout:React.FC<AdminLayoutProps> = ({ children }) => {
 
 export const navbarItems: NavbarItem[] = [
     {
-        label: 'Dashboard',
-        url: '/admin/dashboard'
-    },
-    {
         label: 'Users',
         url: '/admin/users'
     },
     {
-        label: 'Profile',
-        url: ''
-    },
-    {
-        label: 'Settings',
-        url: ''
+        label: 'Grades',
+        url: '/admin/grades'
     }
 ]

@@ -63,4 +63,8 @@ public class UserFacade extends EntityServiceFacade<User, UserFilter, UserServic
             throw new IllegalStateException(ex);
         }
     }
+
+    public User getAuthenticatedUser() {
+        return securityFacade.getAuthenticatedUser();
+    }
 }
