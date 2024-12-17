@@ -39,7 +39,7 @@ public class QTeacher extends EntityPathBase<Teacher> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modified = _super.modified;
 
-    public final BooleanPath oneLeave = createBoolean("oneLeave");
+    public final BooleanPath onLeave = createBoolean("onLeave");
 
     public final SetPath<TeachersTeachingSubject, QTeachersTeachingSubject> teachersTeachingSubjects = this.<TeachersTeachingSubject, QTeachersTeachingSubject>createSet("teachersTeachingSubjects", TeachersTeachingSubject.class, QTeachersTeachingSubject.class, PathInits.DIRECT2);
 
