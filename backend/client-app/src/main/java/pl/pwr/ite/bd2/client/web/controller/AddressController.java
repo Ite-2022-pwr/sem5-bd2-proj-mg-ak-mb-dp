@@ -29,8 +29,10 @@ public class AddressController implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        defaultSingleProperties = mappingService.createProperties(AddressDto.Properties.class);
-        defaultListProperties = mappingService.createProperties(AddressDto.Properties.class);
+        defaultSingleProperties = mappingService.createProperties(AddressDto.Properties.class)
+                .setIncludePostCode(true);
+        defaultListProperties = mappingService.createProperties(AddressDto.Properties.class)
+                .setIncludePostCode(true);
     }
 
     @GetMapping

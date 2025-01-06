@@ -7,21 +7,16 @@ import pl.pwr.ite.bd2.mapping.MappingProperties;
 import java.util.UUID;
 
 @Data
-public class AddressDto {
+public class PhoneNumberDto {
 
     @Data
     @Accessors(chain = true)
     public static abstract class Properties implements MappingProperties {
-        private boolean includePostCode;
+
     }
 
     private UUID id;
 
-    private PostCodeDto postCode;
+    private String phoneNumber;
 
-    private String street;
-
-    private String buildingNumber;
-
-    private String apartmentNumber;
 }

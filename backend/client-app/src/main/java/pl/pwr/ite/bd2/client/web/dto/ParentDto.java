@@ -3,25 +3,22 @@ package pl.pwr.ite.bd2.client.web.dto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import pl.pwr.ite.bd2.mapping.MappingProperties;
+import pl.pwr.ite.bd2.model.enums.ParentRole;
 
 import java.util.UUID;
 
 @Data
-public class AddressDto {
+public class ParentDto {
 
     @Data
     @Accessors(chain = true)
     public static abstract class Properties implements MappingProperties {
-        private boolean includePostCode;
+        private boolean includeUser;
     }
 
     private UUID id;
 
-    private PostCodeDto postCode;
+    private UserDto user;
 
-    private String street;
-
-    private String buildingNumber;
-
-    private String apartmentNumber;
+    private ParentRole parentRole;
 }

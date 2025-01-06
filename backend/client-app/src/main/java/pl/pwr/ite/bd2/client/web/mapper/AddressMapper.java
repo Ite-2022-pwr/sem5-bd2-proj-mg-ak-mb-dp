@@ -19,6 +19,8 @@ public class AddressMapper extends MapperBase<Address, AddressDto, AddressDto.Pr
         destination.setBuildingNumber(source.getBuildingNumber());
         destination.setApartmentNumber(source.getApartmentNumber());
 
-        map(destination::setPostCode, source.getPostCode(), postCodeMapper, properties);
+        if (properties.isIncludePostCode()) {
+            map(destination::setPostCode, source.getPostCode(), postCodeMapper, properties);
+        }
     }
 }

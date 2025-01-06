@@ -4,24 +4,23 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import pl.pwr.ite.bd2.mapping.MappingProperties;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
-public class AddressDto {
+public class TeacherDto {
 
     @Data
     @Accessors(chain = true)
     public static abstract class Properties implements MappingProperties {
-        private boolean includePostCode;
+        private boolean includeUser;
     }
 
     private UUID id;
 
-    private PostCodeDto postCode;
+    private LocalDate lastCOCRDate;
 
-    private String street;
+    private Boolean oneLeave;
 
-    private String buildingNumber;
-
-    private String apartmentNumber;
+    private UserDto user;
 }
