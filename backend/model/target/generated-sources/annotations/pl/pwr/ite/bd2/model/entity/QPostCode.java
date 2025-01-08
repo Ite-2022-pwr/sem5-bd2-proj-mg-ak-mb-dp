@@ -35,6 +35,8 @@ public class QPostCode extends EntityPathBase<PostCode> {
 
     public final StringPath postCode = createString("postCode");
 
+    public final StringPath regionName = createString("regionName");
+
     public QPostCode(String variable) {
         super(PostCode.class, forVariable(variable));
     }

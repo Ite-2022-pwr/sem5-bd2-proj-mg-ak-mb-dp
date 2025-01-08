@@ -33,8 +33,6 @@ public class QSchoolClass extends EntityPathBase<SchoolClass> {
 
     public final StringPath name = createString("name");
 
-    public final SetPath<Student, QStudent> student = this.<Student, QStudent>createSet("student", Student.class, QStudent.class, PathInits.DIRECT2);
-
     public final SetPath<Student, QStudent> students = this.<Student, QStudent>createSet("students", Student.class, QStudent.class, PathInits.DIRECT2);
 
     public final NumberPath<Integer> yearOfStudy = createNumber("yearOfStudy", Integer.class);

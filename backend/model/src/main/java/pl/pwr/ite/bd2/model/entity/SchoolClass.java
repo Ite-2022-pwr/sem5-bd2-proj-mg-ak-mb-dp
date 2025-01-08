@@ -31,6 +31,4 @@ public class SchoolClass extends EntityBase {
     @Column(nullable = false, name = "YearStarted")
     private LocalDateTime yearStarted;
 
-    @OneToMany(mappedBy = "studentClass")
-    private Set<Student> student = new HashSet<>();
 }
