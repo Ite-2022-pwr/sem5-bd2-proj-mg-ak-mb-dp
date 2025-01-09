@@ -5,15 +5,16 @@ import React, {useEffect, useState} from "react";
 import {Field} from "@/components/ui/field";
 import {UserService} from "@/service/UserService";
 import {isErrorDto} from "@/service/utils";
+import {Button} from "@/components/ui/button";
 
 export const UserPage = () => {
     const router = useRouter();
     const { id } = router.query;
 
     const [userData, setUserData] = useState<UserDto>(emptyUser);
-    const userService = new UserService();
 
     const userId = typeof id === "string" ? id : "";
+    const userService = new UserService();
 
     useEffect(() => {
         if(userId) {
@@ -48,7 +49,7 @@ export const UserPage = () => {
     }
 
     return (
-        <Flex direction={"column"}>
+        <Flex marginTop={5} marginRight={5} direction={"column"}>
             <form onSubmit={handleSubmit}>
                 <Field label={"First name"} required>
                     <Input value={userData.firstName} name="firstName" onChange={handleChange} placeholder={"First Name"} variant={"outline"}/>
@@ -59,9 +60,9 @@ export const UserPage = () => {
                 <Field label={"Email"} required>
                     <Input value={userData.email} name="email" onChange={handleChange} placeholder={"test@example.com"} variant={"outline"}/>
                 </Field>
-                <button type={"submit"}>
+                <Button type={"submit"} variant={"outline"} marginTop={5}>
                     Zapisz
-                </button>
+                </Button>
             </form>
         </Flex>
     );

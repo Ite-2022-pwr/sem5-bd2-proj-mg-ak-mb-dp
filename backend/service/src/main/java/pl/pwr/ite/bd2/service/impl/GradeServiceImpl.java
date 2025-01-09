@@ -9,6 +9,7 @@ import pl.pwr.ite.bd2.service.GradeService;
 
 @Service
 public class GradeServiceImpl extends FilterableEntityServiceBase<Grade, GradeFilter> implements GradeService {
+
     public GradeServiceImpl(GradeRepository repository) {
         super(repository);
     }

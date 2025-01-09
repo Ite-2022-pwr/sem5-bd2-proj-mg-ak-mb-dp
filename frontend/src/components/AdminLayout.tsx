@@ -21,7 +21,7 @@ export const AdminLayout:React.FC<AdminLayoutProps> = ({ children }) => {
                 </Text>
                 <Flex width="100%" direction={"column"} padding={5} gap={10} >
                     {navbarItems.map((item) => (
-                        <Button fontSize={20} key={item.label} onClick={() => router.push(item.url)}>
+                        <Button variant={"outline"} fontSize={20} key={item.label} onClick={() => router.push(item.url)}>
                             {item.label}
                         </Button>
                     ))}
@@ -37,6 +37,10 @@ export const AdminLayout:React.FC<AdminLayoutProps> = ({ children }) => {
 
 
 export const navbarItems: NavbarItem[] = [
+    {
+        label: 'Create Lesson',
+        url: '/admin/lesson/create'
+    },
     {
         label: 'Users',
         url: '/admin/users'

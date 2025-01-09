@@ -11,6 +11,7 @@ import pl.pwr.ite.bd2.web.SecurityFacade;
 
 @Component
 public class GradeFacade extends EntityServiceFacade<Grade, GradeFilter, GradeService, GradeDto, GradeDto.Properties, GradeMapper> {
+
     public GradeFacade(GradeService service, GradeMapper mapper, SecurityFacade securityFacade) {
         super(service, mapper, securityFacade);
     }

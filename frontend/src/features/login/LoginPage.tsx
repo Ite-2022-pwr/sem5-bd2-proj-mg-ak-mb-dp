@@ -1,5 +1,5 @@
 import {useRouter} from "next/router";
-import {useAuth} from "@/provider/AuthProvider";
+import {useAuth} from "@/service/provider/AuthProvider";
 import React, {useState} from "react";
 import {CredentialsDto} from "@/model/CredentialsDto";
 import {Flex, Input} from "@chakra-ui/react";

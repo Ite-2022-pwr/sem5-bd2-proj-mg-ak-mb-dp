@@ -1,6 +1,6 @@
 import Head from "next/head";
 import {chakra} from "@chakra-ui/react";
-import {UserPage} from "@/components/UserPage";
+import {UserPage} from "@/features/user/UserPage";
 
 export default function User() {
     return (

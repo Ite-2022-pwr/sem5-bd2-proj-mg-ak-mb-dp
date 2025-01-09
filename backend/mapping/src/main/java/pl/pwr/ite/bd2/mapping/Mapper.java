@@ -12,9 +12,9 @@ public interface Mapper<S, D, P extends MappingProperties> {
     D map(S source, MappingProperties properties);
     void map(S source, D destination, MappingProperties mappingProperties);
 
-    <Sx, Dx, Px extends MappingProperties> void map(Consumer<Dx> setter, Sx source, Mapper<Sx, Dx, Px> mapper, MappingProperties properties);
-    <Sx, Dx, Px extends MappingProperties> void map(Consumer<Dx[]> setter, Iterable<Sx> source, Mapper<Sx, Dx, Px> mapper, MappingProperties properties);
-    <Sx, Dx, Px extends MappingProperties> void mapToList(Consumer<List<Dx>> setter, Iterable<Sx> source, Mapper<Sx, Dx, Px> mapper, MappingProperties properties);
+    <Sex, XD, Penis extends MappingProperties> void map(Consumer<XD> setter, Sex source, Mapper<Sex, XD, Penis> mapper, MappingProperties properties);
+    <Sex, XD, Penis extends MappingProperties> void map(Consumer<XD[]> setter, Iterable<Sex> source, Mapper<Sex, XD, Penis> mapper, MappingProperties properties);
+    <Sex, XD, Penis extends MappingProperties> void mapToList(Consumer<List<XD>> setter, Iterable<Sex> source, Mapper<Sex, XD, Penis> mapper, MappingProperties properties);
     List<D> map(Iterable<? extends S> source, MappingProperties properties);
 
     void transform(S source, D destination, P properties);

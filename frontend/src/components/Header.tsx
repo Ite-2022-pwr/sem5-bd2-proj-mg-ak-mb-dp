@@ -1,5 +1,5 @@
 import {Box, Button, Center, Flex, Text} from "@chakra-ui/react";
-import {useAuth} from "@/provider/AuthProvider";
+import {useAuth} from "@/service/provider/AuthProvider";
 import {useEffect, useState} from "react";
 import {UserService} from "@/service/UserService";
 import {UserDto} from "@/model/UserDto";

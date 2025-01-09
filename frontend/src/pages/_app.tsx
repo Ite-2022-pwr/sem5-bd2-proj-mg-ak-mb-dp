@@ -3,7 +3,7 @@ import {ChakraProvider, Flex} from "@chakra-ui/react";
 import system from "@/theme";
 import { useState} from "react";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {AuthProvider} from "@/provider/AuthProvider";
+import {AuthProvider} from "@/service/provider/AuthProvider";
 import {useRouter} from "next/router";
 import {Header} from "@/components/Header";
 import {AdminLayout} from "@/components/AdminLayout";
