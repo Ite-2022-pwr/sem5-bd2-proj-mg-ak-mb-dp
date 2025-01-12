@@ -31,7 +31,13 @@ public enum ApplicationError implements ErrorDescriptor {
 
     //ACTIVITY REGISTRATION
     ActivityRegistrationNotFound(HttpStatus.NOT_FOUND),
-    TeamNameAlreadyTaken(HttpStatus.FORBIDDEN)
+    TeamNameAlreadyTaken(HttpStatus.FORBIDDEN),
+
+    //DB2
+    LessonNotFound(HttpStatus.NOT_FOUND),
+    SchoolClassNotFound(HttpStatus.NOT_FOUND),
+    TeacherNotFound(HttpStatus.NOT_FOUND),
+    SchoolSubjectNotFound(HttpStatus.NOT_FOUND),
     ;
 
     private final HttpStatus defaultStatus;

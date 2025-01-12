@@ -3,11 +3,9 @@ package pl.pwr.ite.bd2.client.web.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.pwr.ite.bd2.client.web.dto.LessonDto;
+import pl.pwr.ite.bd2.client.web.dto.SchoolClassDto;
 import pl.pwr.ite.bd2.client.web.service.LessonFacade;
 import pl.pwr.ite.bd2.mapping.MappingProperties;
 import pl.pwr.ite.bd2.model.filter.LessonFilter;
@@ -47,5 +45,17 @@ public class LessonController implements InitializingBean {
     @GetMapping("/{id}")
     public ResponseEntity<LessonDto> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(lessonFacade.getById(id, defaultSingleProperties));
+    }
+
+    @PostMapping
+    public ResponseEntity<LessonDto> create(@RequestBody LessonDto dto) {
+        var lesson = lessonFacade.create(dto);
+        return ResponseEntity.ok(lessonFacade.map(lesson, defaultSingleProperties));
+    }
+
+    @PutMapping("/{id}") // zmienna oznaczona @PathVariable musi mieć dokładnie taką samą nazwę jak w stringu w @PutMapping
+    public ResponseEntity<LessonDto> update(@PathVariable UUID id, @RequestBody LessonDto dto) {
+        var lesson = lessonFacade.update(id, dto);
+        return ResponseEntity.ok(lessonFacade.map(lesson, defaultSingleProperties));
     }
 }
