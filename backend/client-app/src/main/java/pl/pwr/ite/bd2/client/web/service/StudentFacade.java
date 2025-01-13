@@ -1,5 +1,6 @@
 package pl.pwr.ite.bd2.client.web.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 import pl.pwr.ite.bd2.client.web.dto.StudentDto;
 import pl.pwr.ite.bd2.client.web.mapper.StudentMapper;
@@ -13,6 +14,8 @@ import pl.pwr.ite.bd2.web.SecurityFacade;
 import pl.pwr.ite.bd2.web.exception.ApplicationError;
 import pl.pwr.ite.bd2.web.exception.ApplicationException;
 
+import java.util.UUID;
+
 @Component
 public class StudentFacade extends EntityServiceFacade<Student, StudentFilter, StudentService, StudentDto, StudentDto.Properties, StudentMapper> {
 
@@ -23,6 +26,21 @@ public class StudentFacade extends EntityServiceFacade<Student, StudentFilter, S
         super(service, mapper, securityFacade);
         this.userService = userService;
         this.schoolClassService = schoolClassService;
+    }
+
+    @Transactional
+    public Student create(StudentDto dto) {
+        Student student = new Student();
+        return saveAndFlush(setValues(student, dto));
+    }
+
+    @Transactional
+    public Student update(UUID id, StudentDto dto) {
+        var student = getById(id);
+        if (student == null) {
+            throw new ApplicationException(ApplicationError.StudentNotFound);
+        }
+        return saveAndFlush(setValues(student, dto));
     }
 
     private Student setValues(Student student, StudentDto dto) {
