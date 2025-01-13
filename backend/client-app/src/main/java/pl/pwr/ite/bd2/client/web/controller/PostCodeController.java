@@ -24,7 +24,6 @@ public class PostCodeController implements InitializingBean {
 
     private final PostCodeFacade postCodeFacade;
     private final MappingService mappingService;
-    private final MessageFacade messageFacade;
 
     private MappingProperties defaultSingleProperties;
     private MappingProperties defaultListProperties;
