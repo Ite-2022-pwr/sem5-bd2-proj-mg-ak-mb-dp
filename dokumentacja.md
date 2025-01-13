@@ -73,16 +73,44 @@ Wrocław, 2025 r.
 ## 2.3 Wymagania niefunkcjonalne
 ---
 ### 2.3.1 Wykorzystywane technologie i narzędzia
+Realizacja projektu nastąpiła jako aplikacja webowa podzielona na frontend i backend.
+
+Backend został zrealizowany przy pomocy frameworka spring boot oraz ORMa Hibernate, napisany jest w języku programowania Java.
+
+Frontend jest aplikacją w języku Typescript korzystającą z frameworków React oraz Chakra UI. Frontend komunikuje się z backendem przy pomocy REST API.
+
+Baza danych korzysta z silnika PostgreSQL.
 ### 2.3.2 Wymagania dotyczące rozmiaru bazy danych
+Po wstępnym przeliczeniu dla poniższych założeń co do najlicznieszych tabel w bazie:
+- 800 uczniów
+- 50 nauczycieli
+- 600 rodziców
+- 7200 lekcji w jednym semestrze
+- 36000 ocen w jednym semestrze
+- 180000 wpisów obecności w jednym semestrze
+- nieokreślona liczba wiadomości
+
+Otrzymaliśmy około 1/2 GB danych w bazie na jeden semestr.
 ### 2.3.3 Wymagania dotyczące bezpieczeństwa systemu
+W naszej aplikacji zastosowaliśmy mechanizm uwierzytelniania użytkowników przy pomocy JWT. Wszystkie zapytania do serwera muszą być autoryzowane, a użytkownik musi być zalogowany. Wszystkie zapytania do bazy danych są sprawdzane pod kątem uprawnień użytkownika przez logikę biznesową aplikacji po stronie backendu.
 
 ## 2.4 Przyjęte założenia projektowe
+
 ---
 # 3. Projekt systemu
 - Projekt i struktury bazy danych, mechanizmów zapewniania poprawności przechowywanych informacji, oraz kontroli dostępu do danych.
 ## 3.1 Projekt bazy danych
 ---
 ### 3.1.1 Analiza rzeczywistości i uproszczony model konceptualny
+W trakcie projektu analizując rzeczywiste działanie szkoły i biorąc pod uwagę nasze wcześniejsze doświadczenia z systemami dzienników elektronicznych, doszliśmy do wniosku, że nasz system powinien składać się z kilku głównych elementów:
+- Użytkownik
+- Uczeń
+- Nauczyciel
+- Rodzic
+- Lekcja
+- Ocena
+- Obecność
+- Wiadomość
 ### 3.1.2 Model logiczny i normalizacja
 ### 3.1.3 Model fizyczny i ograniczenia integralności danych
 ### 3.1.4 Inne elementy schematu - mechanizmy przetwarzania danych
