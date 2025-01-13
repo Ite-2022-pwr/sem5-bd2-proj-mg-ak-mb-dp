@@ -3,10 +3,7 @@ package pl.pwr.ite.bd2.client.web.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.pwr.ite.bd2.client.web.dto.ParentDto;
 import pl.pwr.ite.bd2.client.web.service.ParentFacade;
 import pl.pwr.ite.bd2.mapping.MappingProperties;
@@ -43,5 +40,17 @@ public class ParentController implements InitializingBean {
     @GetMapping("/{id}")
     public ResponseEntity<ParentDto> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(parentFacade.getById(id, defaultSingleProperties));
+    }
+
+    @PostMapping
+    public ResponseEntity<ParentDto> create(@RequestBody ParentDto dto) {
+        var parent = parentFacade.create(dto);
+        return ResponseEntity.ok(parentFacade.map(parent, defaultSingleProperties));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ParentDto> update(@PathVariable UUID id, @RequestBody ParentDto dto) {
+        var parent = parentFacade.update(id, dto);
+        return ResponseEntity.ok(parentFacade.map(parent, defaultSingleProperties));
     }
 }

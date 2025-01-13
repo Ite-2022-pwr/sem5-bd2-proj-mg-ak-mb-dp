@@ -38,6 +38,14 @@ public enum ApplicationError implements ErrorDescriptor {
     SchoolClassNotFound(HttpStatus.NOT_FOUND),
     TeacherNotFound(HttpStatus.NOT_FOUND),
     SchoolSubjectNotFound(HttpStatus.NOT_FOUND),
+    PostCodeNotFound(HttpStatus.NOT_FOUND),
+    AddressNotFound(HttpStatus.NOT_FOUND),
+    StudentNotFound(HttpStatus.NOT_FOUND),
+    GradeNotFound(HttpStatus.NOT_FOUND),
+    MessageNotFound(HttpStatus.NOT_FOUND),
+    ParentNotFound(HttpStatus.NOT_FOUND),
+    PhoneNumberNotFound(HttpStatus.NOT_FOUND),
+    PresenceNotFound(HttpStatus.NOT_FOUND),
     ;
 
     private final HttpStatus defaultStatus;
