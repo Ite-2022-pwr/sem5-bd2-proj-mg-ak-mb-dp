@@ -3,10 +3,7 @@ package pl.pwr.ite.bd2.client.web.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.pwr.ite.bd2.client.web.dto.MessageDto;
 import pl.pwr.ite.bd2.client.web.service.MessageFacade;
 import pl.pwr.ite.bd2.mapping.MappingProperties;
@@ -44,5 +41,17 @@ public class MessageController implements InitializingBean {
     @GetMapping("/{id}")
     public ResponseEntity<MessageDto> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(messageFacade.getById(id, defaultSingleProperties));
+    }
+
+    @PostMapping
+    public ResponseEntity<MessageDto> create(@RequestBody MessageDto dto) {
+        var message = messageFacade.create(dto);
+        return ResponseEntity.ok(messageFacade.map(message, defaultSingleProperties));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MessageDto> update(@PathVariable UUID id, @RequestBody MessageDto dto) {
+        var message = messageFacade.update(id, dto);
+        return ResponseEntity.ok(messageFacade.map(message, defaultSingleProperties));
     }
 }

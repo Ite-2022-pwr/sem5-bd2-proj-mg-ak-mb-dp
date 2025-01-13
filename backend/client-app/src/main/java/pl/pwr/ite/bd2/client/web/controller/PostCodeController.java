@@ -3,12 +3,10 @@ package pl.pwr.ite.bd2.client.web.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.pwr.ite.bd2.client.web.dto.PostCodeDto;
 import pl.pwr.ite.bd2.client.web.service.MessageFacade;
+import pl.pwr.ite.bd2.client.web.service.PhoneNumberFacade;
 import pl.pwr.ite.bd2.client.web.service.PostCodeFacade;
 import pl.pwr.ite.bd2.mapping.MappingProperties;
 import pl.pwr.ite.bd2.model.filter.PostCodeFilter;
@@ -24,7 +22,6 @@ public class PostCodeController implements InitializingBean {
 
     private final PostCodeFacade postCodeFacade;
     private final MappingService mappingService;
-    private final MessageFacade messageFacade;
 
     private MappingProperties defaultSingleProperties;
     private MappingProperties defaultListProperties;
@@ -44,5 +41,17 @@ public class PostCodeController implements InitializingBean {
     @GetMapping("/{id}")
     public ResponseEntity<PostCodeDto> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(postCodeFacade.getById(id, defaultSingleProperties));
+    }
+
+    @PostMapping
+    public ResponseEntity<PostCodeDto> create(@RequestBody PostCodeDto dto) {
+        var postCode = postCodeFacade.create(dto);
+        return ResponseEntity.ok(postCodeFacade.map(postCode, defaultSingleProperties));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PostCodeDto> update(@PathVariable UUID id, @RequestBody PostCodeDto dto) {
+        var postCode = postCodeFacade.update(id, dto);
+        return ResponseEntity.ok(postCodeFacade.map(postCode, defaultSingleProperties));
     }
 }

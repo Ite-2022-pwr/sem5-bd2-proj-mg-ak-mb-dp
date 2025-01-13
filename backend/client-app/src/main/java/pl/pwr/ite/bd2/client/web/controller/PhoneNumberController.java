@@ -3,10 +3,7 @@ package pl.pwr.ite.bd2.client.web.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.pwr.ite.bd2.client.web.dto.PhoneNumberDto;
 import pl.pwr.ite.bd2.client.web.service.PhoneNumberFacade;
 import pl.pwr.ite.bd2.mapping.MappingProperties;
@@ -41,5 +38,17 @@ public class PhoneNumberController implements InitializingBean {
     @GetMapping("/{id}")
     public ResponseEntity<PhoneNumberDto> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(phoneNumberFacade.getById(id, defaultSingleProperties));
+    }
+
+    @PostMapping
+    public ResponseEntity<PhoneNumberDto> create(@RequestBody PhoneNumberDto dto) {
+        var phoneNumber = phoneNumberFacade.create(dto);
+        return ResponseEntity.ok(phoneNumberFacade.map(phoneNumber, defaultSingleProperties));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PhoneNumberDto> update(@PathVariable UUID id, @RequestBody PhoneNumberDto dto) {
+        var phoneNumber = phoneNumberFacade.update(id, dto);
+        return ResponseEntity.ok(phoneNumberFacade.map(phoneNumber, defaultSingleProperties));
     }
 }

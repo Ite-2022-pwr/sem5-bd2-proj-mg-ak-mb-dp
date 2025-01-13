@@ -75,6 +75,7 @@ public class LessonFacade extends EntityServiceFacade<Lesson, LessonFilter, Less
         if(subject == null) {
             throw new ApplicationException(ApplicationError.SchoolSubjectNotFound);
         }
+        lesson.setSchoolSubject(subject);
 
         return lesson;
     }
