@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pl.pwr.ite.bd2.client.web.controller.StudentController;
 import pl.pwr.ite.bd2.client.web.dto.LessonDto;
 import pl.pwr.ite.bd2.client.web.dto.SchoolClassDto;
 import pl.pwr.ite.bd2.client.web.dto.SchoolSubjectDto;
@@ -83,7 +82,7 @@ public class LessonFacadeTest {
     }
 
     @Test
-    public void testOne() {
+    public void givenDto_shouldReturnValidEntity() {
         var lessonDto = new LessonDto();
 
         var schoolClassDto = new SchoolClassDto();
