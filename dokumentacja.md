@@ -112,9 +112,22 @@ W trakcie projektu analizując rzeczywiste działanie szkoły i biorąc pod uwag
 - Obecność
 - Wiadomość
 ### 3.1.2 Model logiczny i normalizacja
+W trakcie projektowania bazy danych przenieśliśmy elementy z powyższego punktu na encje w bazie, oraz od razu projektowaliśmy je zgodnie z 3 postacią normalną.
 ### 3.1.3 Model fizyczny i ograniczenia integralności danych
+Aby zapewnić poprawność danych w bazie, zdefiniowaliśmy szereg ograniczeń integralności danych:
+- Klucze główne
+- Klucze obce
+- Unikalność
+- Poprawnie dobrane typy danych
+- Automatyczne akcje przy usunięciu rekordów powiązanych kluczem obcym
 ### 3.1.4 Inne elementy schematu - mechanizmy przetwarzania danych
+Większość mechanizmów przetwarzania danych dokonywana będzie przez logikę aplikacji, z racji na używanie ORMa Hibernate na bazie, której struktura jest z góry określona.
 ### 3.1.5 Projekt mechanizmów bezpieczeństwa na poziomie bazy danych
+W bazie danych są dwa konta dla użytkowników:
+- Konto aplikacji mające dostęp do wszystkich tabel i operacji CRUD na nich, jednak nie mogące edytować ich struktury
+- Konto administratora mające dostęp do wszystkich operacji na bazie danych, włącznie z edycją struktury oraz tworzenie i przywracanie backupów
+
+[schemat bazy](Untitled.png)
 
 ## 3.2 Projekt aplikacji użytkownika
 --- 
@@ -130,7 +143,7 @@ W trakcie projektu analizując rzeczywiste działanie szkoły i biorąc pod uwag
 - W projekcie używamy **ORM** (*Hibernate*) przy założeniu **Database First**.  
 ### 3.2.5 Projekt zabezpieczeń na poziomie aplikacji
 # 4. Implementacja systemu baz danych
-- Implementacja i testy bazy danych w wybranym systemie zarządzania bazą danych.
+Baza danych została zaimplementowana w PostgreSQL. W projekcie wykorzystaliśmy ORM Hibernate, który pozwala na mapowanie obiektów na relacyjne bazy danych.
 ## 4.1 Tworzenie tabel i definiowanie ograniczeń
 ---
 
