@@ -3,5 +3,5 @@ package pl.pwr.ite.bd2.model.filter;
 import lombok.Data;
 
 @Data
-public class PostCodeFilter extends Filter {
+public class PostCodeFilter extends Filter{
 }

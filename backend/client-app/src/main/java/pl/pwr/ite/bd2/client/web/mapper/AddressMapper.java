@@ -9,18 +9,13 @@ import pl.pwr.ite.bd2.model.entity.Address;
 @Component
 @RequiredArgsConstructor
 public class AddressMapper extends MapperBase<Address, AddressDto, AddressDto.Properties> {
+    private String street;
+    private String buildingNumber;
 
-    private final PostCodeMapper postCodeMapper;
+    private String apartmentNumber;
 
     @Override
     public void transform(Address source, AddressDto destination, AddressDto.Properties properties) {
-        destination.setId(source.getId());
         destination.setStreet(source.getStreet());
-        destination.setBuildingNumber(source.getBuildingNumber());
-        destination.setApartmentNumber(source.getApartmentNumber());
-
-        if (properties.isIncludePostCode()) {
-            map(destination::setPostCode, source.getPostCode(), postCodeMapper, properties);
-        }
     }
 }
