@@ -479,22 +479,318 @@ Uważamy że powyższe uprawnienia będą wystarczające dla zapewnienia bezpiec
 # 5. Implementacja i testy aplikacji
 - Skrócone sprawozdanie z etapu implementacja i testowania aplikacji.
 
-## 5.1 Instalacja ikonfigurowanie systemu
+## 5.1 Instalacja i konfigurowanie systemu
+W celu wprowadzenia własnej implementacji należy edytować plik `application.yml` dostępny w podfolderze `resources` w module `client-app` \
+Szczególną uwagę należy zwrócić na port na którym działa aplikacja oraz parametry połączenia do bazy danych
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://<DB_URL>
+    username: <DB_USER>
+    password: <DB_PASSWORD>
+```
+Następnym krokiem jest zainstalowanie wymaganych bibliotek i wygenerowanie klas pomocniczych. Możemy to osiągnąć za pomocą polecenia
+```
+mvn clean install
+```
+W celu uruchomienia aplikacji należy wykonać polecenie
+```
+mvn -pl client-app -am spring-boot:run
+```
+
 ---
 
 ## 5.2 Instrukcja użytkowania aplikacji
+Aplikacja została zbudowana w oparciu o model architektury REST. Udostępnione zostały kontrolery umożliwiające listowanie oraz edycję danych.
+
+Pełna dokumentacja dostępnych kontrolerów wraz z modelami danych została przygotowana za pomocą narzędzia `Swagger 2 UI`, które jest dostępne pod adresem:
+`<APP_URL>/swagger-ui/index.html`.
+
+Backend aplikacji jest zabezpieczony mechanizmem autoryzacji opartym na tokenach JWT. Każdy z kontrolerów wymaga dołączenia ważnego tokenu autoryzacyjnego do nagłówka Authorization. Token ten można uzyskać, wysyłając żądanie POST na endpoint <APP_URL>/auth/login z następującymi danymi:
+```json
+{
+  "username": "twoja_nazwa_uzytkownika",
+  "password": "twoje_haslo"
+}
+```
+Jeśli proces autoryzacji przebiegnie pomyślnie, endpoint zwróci dane w następującym formacie:
+```json
+{
+  "token": "twój_token_jwt",
+  "expireTime": 1234567890
+}
+```
+Token uzyskany w odpowiedzi należy dołączyć w nagłówku Authorization w postaci Bearer <token> w każdym dalszym żądaniu do kontrolerów zabezpieczonych autoryzacją.
+
 ---
 
 ## 5.3 Testowanie opracowanych funkcji systemu
+Dla wybranych funkcji systemu opracowane zostały testy jednostkowe sprawdzające poprawne działanie poszczególnych komponentów. \
+Testy opracowane zostały za pomocą narzędzi i bibliotek dostarczanych przez środowisko `spring boot` takich jak `mockito` oraz `JUnit` \
+Testom poddane zostały fasady, serwisy i mappery. Poniżej znajduje się przykładowy test mappera upewniający się, że pola i klasy zagnieżdżone zostają poprawnie zmapowane 
+```java
+@BeforeEach
+public void setUp() {
+  schoolClass = new SchoolClass();
+  schoolClass.setId(SCHOOL_CLASS_ID);
+  
+  when(schoolClassMapper.createDestination(any(SchoolClass.class))).thenReturn(new SchoolClassDto());
+  
+  doAnswer(invocation -> {
+  var entity = invocation.getArgument(0, SchoolClass.class);
+  var dto = invocation.getArgument(1, SchoolClassDto.class);
+  dto.setId(entity.getId());
+  return null;
+  }).when(schoolClassMapper).transform(any(SchoolClass.class), any(SchoolClassDto.class), any(SchoolClassDto.Properties.class));
+}
+
+@Test
+public void givenLesson_shouldMapToLessonDto() {
+  var lessonId = UUID.randomUUID();
+  var lesson = new Lesson();
+  lesson.setId(lessonId);
+  lesson.setSchoolSubject(schoolSubject);
+
+  var properties = mappingService.createProperties(LessonDto.Properties.class)
+    .setIncludeSchoolSubject(true);
+
+  var lessonDto = lessonMapper.map(lesson, properties);
+
+  assertEquals(lessonDto.getId(), lessonId);
+
+  assertThat(lessonDto.getStudentClass()).isNotNull();
+  assertEquals(lessonDto.getStudentClass().getId(), SCHOOL_CLASS_ID);
+}
+```
+
 ---
 
 ## 5.4 Omówienie wybranych rozwiązań programistycznych
+
+
 ---
 ### 5.4.1 Implementacja interfejsu dostępu do bazy danych
+W projekcie wykorzystano w pełni możliwości oferowane przez środowisko **Spring Boot**, 
+w tym funkcjonalności dostarczane przez **Spring Data JPA**. Dzięki temu implementacja 
+interfejsu dostępu do bazy danych została znacząco uproszczona i zautomatyzowana. 
+Spring Data JPA generuje niezbędny kod odpowiedzialny za komunikację z bazą danych na
+podstawie definicji encji i repozytoriów, co pozwala skupić się na logice biznesowej aplikacji. \
+
+**Konfiguracja połączenia z bazą danych** \
+Połączenie z bazą danych zostało skonfigurowane za pomocą pliku konfiguracyjnego `application.yml`. 
+W pliku tym określono kluczowe parametry, takie jak:
+- adres bazy danych(`spring.datasource.url`)
+- dane uwierzytelniające użytkownika (`spring.datasource.username` i `spring.datasource.password`)
+- sposób zarządzania schematem bazy danych (`spring.jpa.hibernate.ddl-auto`)
+- mechanizm ORM (Hibernate) oraz jego parametry
+
+**Definicja encji** \
+Każda tabela w bazie danych została odwzorowana za pomocą klasy encji oznaczonej odpowiednimi adnotacjami JPA, m.in.:
+- `@Entity` – określa, że dana klasa jest encją,
+- `@Table` – umożliwia dostosowanie nazwy tabeli w bazie danych (opcjonalne),
+- `@Id` oraz `@GeneratedValue` – definiują klucz główny i strategię jego generowania.
+
+**Repozytoria** \
+Dostęp do danych został zrealizowany poprzez repozytoria dziedziczące po interfejsie `JpaRepository`. 
+Dzięki tej implementacji możliwe jest wykorzystanie gotowych metod CRUD 
+(m.in. `save()`, `findById()`, `deleteById()`) bez konieczności pisania dodatkowego kodu.
 
 ### 5.4.2 Implementacja wybranych funkcjonalności systemu
+**Obsługa wyjątków i błędów**
+W celu ułatwienie konkretnych błędów zgłaszanych przez aplikację stworzony został specjalny wyjątek 
+obsługujący własne błędy
+
+```java
+@Getter
+public class ApplicationException extends RuntimeException {
+
+    private final ErrorDescriptor descriptor;
+    private final HttpStatus status;
+    private final String code;
+    private final Map<String, Object> additionalInfo;
+    private final BindingResult bindingResult;
+    
+    // custom constructors...
+}
+```
+Wyjątek ten jest następnie wyłapywany i analizowany przez klasę `ExceptionMapper` która na podstawie 
+argumentów wyjątku zwraca szczegóły błedu poprzez odpowiednią odpowiedź w formie `ErrorDto`
+```java
+@ControllerAdvice
+public class ExceptionMapper extends ResponseEntityExceptionHandler implements InitializingBean {
+  
+    // ... 
+public ResponseEntity<Object> handleAnyException(Exception exception, WebRequest request, Function<ErrorDto, Object> errorWrapper) {
+    ResolvedError resolvedError = resolveError(exception);
+    ErrorDto errorDto = resolvedError.getError();
+    HttpStatus status = resolvedError.getStatus();
+    Object body = errorWrapper != null ? errorWrapper.apply(errorDto) : errorDto;
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Entity", "Error");
+    return handleExceptionInternal(exception, body, headers, status, request);
+  }
+  // ...
+}
+```
+Klasa `ErrorDto`
+```java
+@Data
+@Accessors(chain = true)
+public class ErrorDto {
+
+    private String requestId;
+
+    private String code;
+
+    private String message;
+
+    private Map<String, Object> additionalInfo;
+
+    private boolean accessRevoked;
+
+    private FieldErrorDto[] fieldErrors;
+}
+```
+
+**CRUD dla zasobów (na przykładzie kontrolera `LessonController`** \
+Kontroler umożliwia listowanie, tworzenie i edycję danych
+```java
+@RestController
+@RequestMapping("/lesson")
+@RequiredArgsConstructor
+public class LessonController implements InitializingBean {
+    private final LessonFacade lessonFacade;
+
+    @GetMapping
+    public ResponseEntity<Collection<LessonDto>> getAll(LessonFilter filter) {
+        return ResponseEntity.ok(lessonFacade.getList(filter, defaultListProperties));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<LessonDto> getById(@PathVariable UUID id) {
+        return ResponseEntity.ok(lessonFacade.getById(id, defaultSingleProperties));
+    }
+
+    @PostMapping
+    public ResponseEntity<LessonDto> create(@RequestBody LessonDto dto) {
+        var lesson = lessonFacade.create(dto);
+        return ResponseEntity.ok(lessonFacade.map(lesson, defaultSingleProperties));
+    }
+
+    @PutMapping("/{id}") // zmienna oznaczona @PathVariable musi mieć dokładnie taką samą nazwę jak w stringu w @PutMapping
+    public ResponseEntity<LessonDto> update(@PathVariable UUID id, @RequestBody LessonDto dto) {
+        var lesson = lessonFacade.update(id, dto);
+        return ResponseEntity.ok(lessonFacade.map(lesson, defaultSingleProperties));
+    }
+}
+```
+
+**Properties** \
+W kontrolerach wykorzystywany jest autorski mechanizm `MappingProperties` które sterują
+zagnieżdżanym mapowaniem encji w maperach. Tworzone są za pomocą serwisu `MappingService`, w każdym kontrolerze
+w dostarczonej przez Spring Boot metodzie `afterPropertiesSet()`. Serwis ten używa refleksji więc w celu braku wpływy na czas odpowiedzi,
+wszystkie metody wykonywane są jednorazowo tuż po starcie aplikacji.
+```java
+@RestController
+@RequestMapping("/lesson")
+@RequiredArgsConstructor
+public class LessonController implements InitializingBean {
+    private final MappingService mappingService;
+
+    private MappingProperties defaultSingleProperties;
+    private MappingProperties defaultListProperties;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        defaultSingleProperties = mappingService.createProperties(LessonDto.Properties.class)
+                .setIncludeSchoolSubject(true)
+                .setIncludeTeacher(true)
+                .setIncludeStudentClass(true);
+        defaultListProperties = mappingService.createProperties(LessonDto.Properties.class)
+                .setIncludeSchoolSubject(true)
+                .setIncludeTeacher(true)
+                .setIncludeStudentClass(true);
+    }
+    // metody kontrolera...
+}
+```
+
+**Logowanie i autoryzacja** \
+System autoryzacji oparty jest o tokeny JWT, uzyskiwany poprzez odpytanie endpointu `/auth/login`
+z zawartymi parametrami `email` oraz `password`. Po sprawdzeniu poprawności danych system zwraca
+wygenerowany token i czas jego żywotności. 
+```java
+@Transactional
+    public JwtDto authenticate(CredentialsDto dto) {
+        try {
+            var token = new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
+            var auth = (UsernamePasswordAuthenticationToken) authenticationManager.authenticate(token);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+
+            var accessToken = jwtService.generateToken((AuthenticatedUser) auth.getPrincipal());
+            var jwtDto = new JwtDto();
+            jwtDto.setToken(accessToken);
+            jwtDto.setExpiresIn(jwtService.getExpirationTime());
+            return jwtDto;
+        } catch (AuthenticationException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+    
+@Data
+public class CredentialsDto {
+
+  private String email;
+
+  private String password;
+}
+
+@Data
+public class JwtDto {
+
+  private String token;
+
+  private Long expiresIn;
+}
+```
+
+Każde zapytanie do aplikacji weryfikowane jest przez
+filtr `JwtAuthorizationFilter` sprawdzający poprawność tokenu. W razie jego niepoprawności system zwraca kod błedu
+403 (FORBIDDEN).
+```java
+@Override
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+        String accessToken = resolveToken(request);
+        if(accessToken == null || accessToken.equals("null")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        try {
+            var userEmail = jwtService.extractUsername(accessToken);
+            var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            if(userEmail != null && authentication == null) {
+                var authenticatedUser = (AuthenticatedUser) userService.loadUserByUsername(userEmail);
+                if(jwtService.isTokenValid(accessToken, authenticatedUser)) {
+                    var user = userService.findByEmail(userEmail);
+                    var authorities = new HashSet<GrantedAuthority>();
+                    userService.collectAuthorities(user, authorities);
+                    var authToken = new UsernamePasswordAuthenticationToken(authenticatedUser, null, authorities);
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            }
+            filterChain.doFilter(request, response);
+        } catch (JwtException ex) {
+            handlerExceptionResolver.resolveException(request, response, null, new ApplicationException(ApplicationError.InvalidJwtToken));
+        } catch (Exception ex) {
+            handlerExceptionResolver.resolveException(request, response, null, ex);
+        }
+    }
+```
 
 # 6. Źródła
+
 ---
 - https://github.com/Ite-2022-pwr
 - https://github.com/Ite-2022-pwr/sem5-bd2-proj-mg-ak-mb-dp
