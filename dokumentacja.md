@@ -23,7 +23,42 @@ Wrocław, 2025 r.
 
 ---
 # Spis treści
-- TO DO
+- 1\. Wstęp
+  - 1.1 Wstęp projektu
+  - 1.2 Zakres projektu
+- 2\. Analiza wymagań
+  - 2.1 Opis działania i schemat logiczny systemu
+  - 2.2 Wymagania funkcjonalne
+  - 2.3 Wymagania niefunkcjonalne
+    - 2.3.1 Wykorzystywane technologie i narzędzia
+    - 2.3.2 Wymagania dotyczące rozmiaru bazy danych
+    - 2.3.3 Wymagania dotyczące bezpieczeństwa systemu
+- 3\. Projekt systemu
+  - 3.1 Projekt bazy danych
+    - 3.1.1 Analiza rzeczywistości i uproszczony model konceptualny
+    - 3.1.2 Model logiczny i normalizacja
+    - 3.1.3 Model fizyczny i ograniczenia integralności danych
+    - 3.1.4 Inne elementy schematu - mechanizmy przetwarzania danych
+    - 3.1.5 Projekt mechanizmów bezpieczeństwa na poziomie bazy danych
+  - 3.2 Projekt aplikacji użytkownika
+    - 3.2.1 Architektura aplikacji i struktura UI
+    - 3.2.2. Interfejs graficzny i struktura menu UI
+    - 3.2.3 Projekt wybranych funkcji systemu
+    - 3.2.4 Metoda podłączania do bazy danych
+    - 3.2.5 Projekt zabezpieczeń na poziomie aplikacji
+- 4\. Implementacja systemu baz danych
+  - 4.1 Tworzenie tabel i definiowanie ograniczeń
+  - 4.2 Implementowanie machanizmów przetwarzania danych
+  - 4.3 Implementacja uprawnień i innych zabezpieczeń
+  - 4.4 Testowanie bazy danych na przykładowych danych
+- 5\. Implementacja i testy aplikacji
+  - 5.1 Instalacja i konfigurowanie systemu
+  - 5.2 Instrukcja użytkowania aplikacji
+  - 5.3 Testowanie opracowanych funkcji systemu
+  - 5.4 Omówienie wybranych rozwiązań programistycznych
+    - 5.4.1 Implementacja interfejsu dostępu do bazy danych
+    - 5.4.2 Implementacja wybranych funkcjonalności systemu
+- 6\. Źródła
 
 ---
 # 1. Wstęp
@@ -135,13 +170,17 @@ W bazie danych są dwa konta dla użytkowników:
 - W projekcie została wykorzystana reguła architektura REST. Ma na celu odseparowanie interfejsu użytkownika od operacji na serwerze. Dodatkowo zachowujemy bezstanowość poprzez wymaganie uwierzytelnienia użytkownika przy każdym zapytaniu. Kolejnym elementem wykorzystanym w projekcie jest separacja warstw. Odziela się logikę biznesową oraz prezentacji od warstwy dostępu do danych. 
  
 ### 3.2.2. Interfejs graficzny i struktura ~~menu~~ UI
-- TO DO
+Środowisko graficzne napisane zostało w technologi React w połączeniu z biblioteką Chakra-UI. 
+Interfejs użytkownika został zaimplementowany w minimalnym stopniu, 
+zaimplementowany został system logowania oraz podstawowa funkcjonalność listowania i edycji użytkowników w systemie 
 
 ### 3.2.3 Projekt wybranych funkcji systemu
 
 ### 3.2.4 Metoda podłączania do bazy danych
 - W projekcie używamy **ORM** (*Hibernate*) przy założeniu **Database First**.  
 ### 3.2.5 Projekt zabezpieczeń na poziomie aplikacji
+Zabezpieczenia zrealizowane zostały za pomocą tokenów JWT dołączanych do każdego zapytania do systemu w nagłówku `authorization`
+
 # 4. Implementacja systemu baz danych
 Baza danych została zaimplementowana w PostgreSQL. W projekcie wykorzystaliśmy ORM Hibernate, który pozwala na mapowanie obiektów na relacyjne bazy danych.
 ## 4.1 Tworzenie tabel i definiowanie ograniczeń
