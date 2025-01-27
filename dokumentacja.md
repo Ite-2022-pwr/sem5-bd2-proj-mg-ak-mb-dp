@@ -23,8 +23,9 @@ Wrocław, 2025 r.
 
 ---
 # Spis treści
+
 - 1\. Wstęp
-  - 1.1 Wstęp projektu
+  - 1.1 Cel projektu
   - 1.2 Zakres projektu
 - 2\. Analiza wymagań
   - 2.1 Opis działania i schemat logiczny systemu
@@ -41,8 +42,8 @@ Wrocław, 2025 r.
     - 3.1.4 Inne elementy schematu - mechanizmy przetwarzania danych
     - 3.1.5 Projekt mechanizmów bezpieczeństwa na poziomie bazy danych
   - 3.2 Projekt aplikacji użytkownika
-    - 3.2.1 Architektura aplikacji i struktura UI
-    - 3.2.2. Interfejs graficzny i struktura menu UI
+    - 3.2.1 Architektura aplikacji
+    - 3.2.2. Interfejs graficzny i struktura UI
     - 3.2.3 Projekt wybranych funkcji systemu
     - 3.2.4 Metoda podłączania do bazy danych
     - 3.2.5 Projekt zabezpieczeń na poziomie aplikacji
@@ -58,7 +59,9 @@ Wrocław, 2025 r.
   - 5.4 Omówienie wybranych rozwiązań programistycznych
     - 5.4.1 Implementacja interfejsu dostępu do bazy danych
     - 5.4.2 Implementacja wybranych funkcjonalności systemu
-- 6\. Źródła
+- 6\. Podsumowanie i wnioski
+- 7\. Źródła
+- 8\. Spis rysunków
 
 ---
 # 1. Wstęp
@@ -74,8 +77,10 @@ Wrocław, 2025 r.
 ## 2.1 Opis działania i schemat logiczny systemu
 ---
 - System będzie działał jako aplikacja webowa składająca się z oddzielnego backendu i frontendu komunikujących się przy pomocy REST API, a bezpośredni dostęp do bazy danych ma tylko backend, który dba też o autentykację użytkowników.
-	![[Pasted image 20250109203833.png]]
+	
+  ![Schemat bazy danych](./Untitled.png)
 	*Rysunek 1. Schemat logiczny systemu.*
+
 ## 2.2 Wymagania funkcjonalne
 ---
 - Panel ucznia 
@@ -96,7 +101,7 @@ Wrocław, 2025 r.
 	- uzupełnianie oraz przeglądanie listy obecności 
 	- wystawianie ocen 
 	- wysyłanie ogłoszeń 
-	- prowadzenie korespondecji z rodzicami (crud) 
+	- prowadzenie korespondecji z rodzicami (CRUD) 
 
 - Panel dyrektora (administrator merytoryczny) 
 	- dodaj usuń edytuj (uczniow nauczycieli rodziców ) 
@@ -162,14 +167,12 @@ W bazie danych są dwa konta dla użytkowników:
 - Konto aplikacji mające dostęp do wszystkich tabel i operacji CRUD na nich, jednak nie mogące edytować ich struktury
 - Konto administratora mające dostęp do wszystkich operacji na bazie danych, włącznie z edycją struktury oraz tworzenie i przywracanie backupów
 
-[schemat bazy](Untitled.png)
-
 ## 3.2 Projekt aplikacji użytkownika
 --- 
-### 3.2.1 Architektura aplikacji i struktura ~~menu~~ UI
+### 3.2.1 Architektura aplikacji
 - W projekcie została wykorzystana reguła architektura REST. Ma na celu odseparowanie interfejsu użytkownika od operacji na serwerze. Dodatkowo zachowujemy bezstanowość poprzez wymaganie uwierzytelnienia użytkownika przy każdym zapytaniu. Kolejnym elementem wykorzystanym w projekcie jest separacja warstw. Odziela się logikę biznesową oraz prezentacji od warstwy dostępu do danych. 
  
-### 3.2.2. Interfejs graficzny i struktura ~~menu~~ UI
+### 3.2.2. Interfejs graficzny i struktura UI
 Środowisko graficzne napisane zostało w technologi React w połączeniu z biblioteką Chakra-UI. 
 Interfejs użytkownika został zaimplementowany w minimalnym stopniu, 
 zaimplementowany został system logowania oraz podstawowa funkcjonalność listowania i edycji użytkowników w systemie 
@@ -828,9 +831,23 @@ filtr `JwtAuthorizationFilter` sprawdzający poprawność tokenu. W razie jego n
     }
 ```
 
-# 6. Źródła
+# 6. Podsumowanie i wnioski
+
+W ramach projektu opracowano system dziennika elektronicznego, obejmujący zarówno jego projekt, jak i implementację kluczowych funkcjonalności. Centralnym elementem systemu jest baza danych, zaprojektowana zgodnie z zasadami trzeciej postaci normalnej, co gwarantuje jej przejrzystość, spójność oraz minimalizację redundancji danych. Aplikacja dostępowa została stworzona jako aplikacja webowa w architekturze REST, co zapewnia elastyczność oraz możliwość łatwej integracji z innymi systemami.  
+
+Backend systemu jest wysoce skalowalny, co umożliwia szybkie i sprawne dodawanie nowych funkcjonalności w przyszłości. Proces uwierzytelniania i autoryzacji użytkowników został zrealizowany z użyciem tokenów JWT (JSON Web Token), co zapewnia wysoki poziom bezpieczeństwa oraz zgodność z nowoczesnymi standardami.
+
+Realizacja projektu okazała się bardziej wymagająca, niż pierwotnie zakładano. Stworzenie aplikacji dostępowej zgodnie z najlepszymi praktykami programistycznymi oraz najnowszymi trendami w tworzeniu aplikacji webowych wymagało przygotowania ponad 100 plików zawierających klasy i interfejsy w języku Java, co przełożyło się na znaczną ilość godzin pracy. Pomimo to, backend systemu oraz REST API są w pełni funkcjonalne, umożliwiając pełną obsługę operacji CRUD (Create, Read, Update, Delete) na bazie danych.
+
+Ze względu na ograniczenia czasowe nie udało się zrealizować w pełni interfejsu użytkownika. Opracowano jedynie podstawową wersję panelu administratora, która pozwala na zarządzanie kluczowymi elementami systemu. Niemniej jednak, solidna implementacja warstwy backendowej oraz zgodność z architekturą REST daje solidne podstawy do dalszego rozwijania systemu i rozbudowy interfejsu w przyszłości.
+
+# 7. Źródła
 
 ---
 - https://github.com/Ite-2022-pwr
 - https://github.com/Ite-2022-pwr/sem5-bd2-proj-mg-ak-mb-dp
 - https://devszczepaniak.pl/wprowadzenie-do-rest-api/
+
+# 8. Spis rysunków
+
+- [*Rysunek 1. Schemat logiczny systemu.*](#21-opis-działania-i-schemat-logiczny-systemu)
