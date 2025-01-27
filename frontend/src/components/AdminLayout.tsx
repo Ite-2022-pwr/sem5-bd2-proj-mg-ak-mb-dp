@@ -17,7 +17,7 @@ export const AdminLayout:React.FC<AdminLayoutProps> = ({ children }) => {
         <HStack height="100%" width="100%" align="stretch" gap={50}>
             <VStack width={"25%"} paddingTop={15}>
                 <Text textAlign={"center"} fontSize={30}>
-                    Dziennik elektroniczny &#34;GEJzer&#34;
+                    Dziennik elektroniczny &#34;Gejzer&#34;
                 </Text>
                 <Flex width="100%" direction={"column"} padding={5} gap={10} >
                     {navbarItems.map((item) => (

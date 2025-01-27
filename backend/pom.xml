@@ -55,6 +55,7 @@
                 <artifactId>reflections</artifactId>
                 <version>${reflections-version}</version>
             </dependency>
+
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
