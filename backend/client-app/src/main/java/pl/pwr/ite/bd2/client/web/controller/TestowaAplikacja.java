@@ -38,11 +38,25 @@ public class TestowaAplikacja {
         return sumOfGrades / sumOfWeights;
     }
 
+    public Student findByFirstAndLastName(String firstName, String lastName) {
+        return students.stream().filter(s ->
+                s.getFirstName().equalsIgnoreCase(firstName)
+                        && s.getLastName().equalsIgnoreCase(lastName)
+        ).findFirst().orElse(null);
+    }
+
+    public void addStudent(String firstName, String lastName) {
+        if(findByFirstAndLastName(firstName, lastName) != null) {
+            throw new IllegalArgumentException("Student already exists");
+        }
+        students.add(new Student(firstName, lastName, new ArrayList<>()));
+    }
+
     @Data
     @AllArgsConstructor
     public static class Student {
         private String firstName;
-        private String secondName;
+        private String lastName;
         private List<Grade> grades;
     }
     @Data
